@@ -78,7 +78,7 @@ Luau uses a binary search to efficiently find the boundary of the array. The pro
 
 In addition, the length will be cached when it's first calculated.
 
-\*`allocatedSize` will be explained in the next section *How Tables Are Stored Internally*
+> `allocatedSize` will be explained in the next section *How Tables Are Stored Internally*
 
 ### Example 1: Contiguous Array
 ```lua
