@@ -1,7 +1,7 @@
 ###### By me
 # In-Depth Guide: Calculating the Length of a Table in Luau
 
-This guide dives deeply into understanding how Luau calculates the length of a table. If you haven't read [Basic Guide to Calculating the Length of a Table in Luau](LuauTableLengthBasic.md), it's recommended to do so first, as it provides the foundational knowledge needed for this guide.
+This guide dives deeply into understanding how Luau calculates the length of a table. If you haven't read [Basic Guide to Calculating the Length of a Table in Luau](LuauTableLengthOverview.md), it's recommended to do so first, as it provides the foundational knowledge needed for this guide.
 
 ---
 
