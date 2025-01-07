@@ -94,7 +94,7 @@ local tbl = {1, nil, 3, 4, nil, 6, 7, nil}
 print(#tbl) -- Output: 4
 
 -- Process:
--- Initial Check:   allocatedSize = 8, and array[8] is nil. Binary search is triggered.
+-- Initial Check:   allocatedSize = 8, and array[7] (tbl[8] in Luau) is nil. Binary search is triggered.
 
 -- First Midpoint:  Check at index mid (⌊size / 2⌋ = ⌊8 / 2⌋ = 4)
 --                  array[4] is nil (tbl[5] in Luau). 
