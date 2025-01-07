@@ -97,7 +97,7 @@ The `getn` function follows a straightforward process:
 
 2. **Fast Path Validation:**
    - If `array[sizearray - 1]` is non-`nil` and the hash portion is empty, the allocated size is returned as the boundary (fast path).
-   - If the `boundary` is within the allocated size and `array[boundary - 1]` is non-`nil` while `array[boundary]` is `nil`, the `boundary` is valid and returned.
+   - If the `boundary` is under the allocated size and `array[boundary - 1]` is non-`nil` while `array[boundary]` is `nil`, the `boundary` is valid and returned.
 
 3. **Update Boundary:**
    - If neither fast path applies, the function attempts to update the boundary using the `updateaboundary` function.
