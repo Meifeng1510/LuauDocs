@@ -411,6 +411,8 @@ ensures that memory management does not interfere with program performance.
 
 In Luau, garbage collection (GC) is managed with a set of tunable parameters that allow fine-grained control over the garbage collector's behavior. These settings enable the GC to balance performance and memory management by adapting to the allocation patterns of the application. The key settings revolve around the **GC pacer**, which helps ensure that the GC can keep up with the application's memory allocation while minimizing overhead. The key settings related to GC pacing are the **GC pacer**, **GC goal**, **step size**, and **GC multiplier**. Each of these settings plays a role in how the GC operates in relation to the application’s memory allocation.
 
+---
+
 ### GC Pacer
 
 The **GC pacer** algorithm is designed to keep the garbage collector in sync with the application’s memory allocation. Its goal is to ensure that the GC can "catch up" to the application allocating garbage, but without putting too much strain on the system. The pacer works by triggering GC steps when certain thresholds are reached, allowing the garbage collector to run incrementally and avoid long pauses. This is achieved by adjusting the GC settings to control when and how frequently the GC steps occur.
@@ -434,6 +436,16 @@ To configure the pacer in Luau, three variables are primarily used:
    - The GC multiplier and GC goal are tightly linked, with their interaction influencing how quickly the garbage collector will run and how much memory it will allow the application to consume before it takes action.
 
 > The exact behavior of these settings is detailed in the `lua.h` (see reference) comments for `LUA_GCSETGOAL`.
+
+---
+
+> Default settings for GC tunables (settable via lua_gc)
+>
+> - LUAI_GCGOAL = 200    // 200% (allow heap to double compared to live heap size)
+> - LUAI_GCSTEPMUL = 200 // GC runs 'twice the speed' of memory allocation
+> - LUAI_GCSTEPSIZE = 1  // GC runs every KB of memory allocation
+
+---
 
 ### Garbage Collection Operations
 
@@ -462,6 +474,8 @@ In the default Luau implementation, the global `collectgarbage` can be called wi
 
 In Roblox, the global `collectgarbage` can only be called with the `"count"` option to get the heap size in kilobytes. The global `gcinfo` function behaves the same as `collectgarbage("count")`.
 
+---
+
 ### Recommended Settings
 
 The `LUA_GCSETSTEPMUL` and `LUA_GCSETGOAL` settings are intricately linked. It is recommended to set the step multiplier **S** within the interval `[100 / (G - 100), 100 + 100 / (G - 100))]` with a minimum value of 150%, where **G** is the GC goal (the ratio of heap size to live data size). For example:
@@ -471,6 +485,8 @@ The `LUA_GCSETSTEPMUL` and `LUA_GCSETGOAL` settings are intricately linked. It i
 - If **G = 125%**, the recommended **S** should be in the interval `[400%, 500%]`.
 
 These recommended settings help ensure that the GC can keep pace with the application's allocation rate and minimize overhead.
+
+---
 
 ## Additional Information
 
