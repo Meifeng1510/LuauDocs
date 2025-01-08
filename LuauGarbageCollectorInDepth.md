@@ -26,7 +26,7 @@ Modern garbage collectors aim to perform these tasks efficiently, ensuring minim
 
 ### Interaction Between the Operating System and Garbage Collector
 
-The operating system (OS) provides memory to the Luau runtime in the form of large chunks, often referred to as memory pages. The Luau runtime then manages this memory internally, subdividing it into smaller units required by scripts and their objects. The garbage collector operates within this framework, ensuring that:
+The operating system (OS) provides memory to the Luau runtime in the form of large chunks, often referred to as memory pages. The Luau runtime then manages this memory internally, subdividing it into smaller [units](LuauGarbageCollectorInDepth.md#luau-heap-structure-and-memory-allocation) required by scripts and their objects. The garbage collector operates within this framework, ensuring that:
 
 - Allocated memory is actively used.
 - Unused memory is reclaimed and returned to the pool of available memory.
@@ -207,7 +207,7 @@ The **sweep phase** is responsible for reclaiming memory occupied by unreachable
 
 **Paged Sweeping:**  
 
-- Unlike the mark phase, which operates at the granularity of individual objects, sweeping in Luau is performed at the granularity of memory pages.  
+- Unlike the mark phase, which operates at the granularity of individual objects, sweeping in Luau is performed at the granularity of [memory pages](LuauGarbageCollectorInDepth.md#luau-heap-structure-and-memory-allocation).  
 - This **paged sweeper** approach further reduces GC overhead by processing memory in larger chunks, improving efficiency during cleanup.
 
 ---
