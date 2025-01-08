@@ -20,5 +20,8 @@ A collection of markdown files I wrote
 
 ### About table:  
 - **How table length is calculated**  
-  - [Basic table length calculation](Table/Guide/LuauTableLengthInDepth.md)  
-  - [Detailed explanation and implementation details of table's length](Table/Guide/LuauTableLengthOverview.md)  
+  - **Guide**
+    - [Basic table length calculation](Table/Guide/LuauTableLengthInDepth.md)  
+    - [Detailed explanation and implementation details of table's length](Table/Guide/LuauTableLengthOverview.md)  
+  - **Excercise**
+    - [Exercises on calculating table's length](Table/Exercise/LuauTableLengthExercise.md)
