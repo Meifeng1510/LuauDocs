@@ -47,7 +47,7 @@ Active threads are marked as gray and rescanned during the atomic phase to captu
 
 ### **2. What is a paged sweeper and how do they operate?**  
 **Answer:**  
-A paged sweeper processes memory in 16 KB pages instead of individual objects. This improves memory locality, reduces metadata overhead, and increases efficiency compared to linked-list-based sweeping methods. It reclaims memory from unreachable objects and prepares live objects for the next GC cycle.
+A paged sweeper refers to a memory management technique that works with pages of memory (16 KB pages in Luau) instead of individual objects. This improves memory locality, reduces metadata overhead, and increases efficiency compared to linked-list-based sweeping methods. It reclaims memory from unreachable objects and prepares live objects for the next GC cycle.
 
 ---
 
