@@ -613,10 +613,6 @@ Now, that will be the final adjustment to the array size, and `resize` will be c
 
 ---
 
-Here's the updated and detailed guide with improved clarity and additional comments:
-
----
-
 ### Size of the Hash Portion in Lua Tables
 
 In Luau, the size of the hash portion of a table depends on how the keys are distributed.
