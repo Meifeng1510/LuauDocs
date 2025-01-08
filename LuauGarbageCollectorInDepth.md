@@ -439,11 +439,11 @@ To configure the pacer in Luau, three variables are primarily used:
 
 Luau provides several operations to control the behavior of the garbage collector. These operations allow the user to stop, restart, or tune the GC, as well as initiate manual garbage collection steps.
 
-- **LUA_GCSETGOAL**: Tunes the GC goal, which is the ratio between the total heap size and the amount of live data.
+- **LUA_GCSETGOAL**: Tunes the GC goal, which is the ratio between the total heap size and the amount of live data. For more details, see the previous section.
   
-- **LUA_GCSETSTEPMUL**: Tunes the step multiplier, which determines how much GC work is done relative to the application's allocation rate.
+- **LUA_GCSETSTEPMUL**: Tunes the step multiplier, which determines how much GC work is done relative to the application's allocation rate. For more details, see the previous section.
 
-- **LUA_GCSETSTEPSIZE**: Tunes the step size in kilobytes. This is the amount of memory that needs to be allocated before the GC step is triggered.
+- **LUA_GCSETSTEPSIZE**: Tunes the step size in kilobytes. This is the amount of memory that needs to be allocated before the GC step is triggered. For more details, see the previous section.
 
 - **LUA_GCSTOP**: Stops the incremental garbage collection process.
 - **LUA_GCRESTART**: Restarts the incremental garbage collection process.
