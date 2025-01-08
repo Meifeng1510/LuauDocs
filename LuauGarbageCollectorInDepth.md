@@ -105,14 +105,21 @@ The garbage collector operates on specific strategies to determine which objects
    - **Mark Phase:** Starting from the root, the GC traverses all references and marks reachable objects.  
    - **Sweep Phase:** The GC iterates through memory and reclaims all unmarked objects, freeing their memory.  
 
-2. **Mark-and-Compact:**  
+2. **Reference Counting:**  
+   Each object has a reference count, which tracks the number of references pointing to it.  
+   - When the count drops to zero, the object is considered garbage and can be deallocated.  
+   This method is simple but can have performance overhead due to frequent updates to reference counts.
+
+3. **Mark-and-Compact:**  
    Similar to mark-and-sweep, but after identifying garbage, the GC compacts the memory by moving live objects together. This reduces fragmentation but requires updating references to moved objects.  
 
-3. **Concurrent Mark-Sweep (CMS):**  
-   The GC runs concurrently with the application, performing the marking and sweeping in parallel. This reduces pause times but can be more complex to implement.  
-
 4. **Generational Garbage Collection:**  
-   Objects are categorized into generations based on their lifespan. Newer objects (short-lived) are collected more frequently, while older objects (long-lived) are collected less often. This is efficient for programs with many short-lived objects.  
+   Objects are categorized into generations based on their lifespan. Newer objects (short-lived) are collected more frequently, while older objects (long-lived) are collected less often. This is based on the empirical observation that most objects die young, so by focusing more on collecting short-lived objects, efficiency can be improved.  
+
+5. **Copying Garbage Collection:**  
+   The heap is divided into two areas, and live objects are copied from one to the other during collection.  
+   - The garbage collector compacts memory by moving live objects to a free space, eliminating fragmentation.  
+   - Once copying is complete, the old area is cleared and reused.
 
 ---
 
