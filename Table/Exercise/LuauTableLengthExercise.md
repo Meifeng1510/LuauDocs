@@ -89,4 +89,5 @@ print(#tbl)
 ---
 
 The solution can be verified by executing the code
-Guides: [Basic overview](Table/Guide/LuauTableLengthOverview.md), [In-depth view](Table/Guide/LuauTableLengthInDepth.md)
+
+Guides: [Basic overview](../Guide/LuauTableLengthOverview.md), [In-depth view](../Guide/LuauTableLengthInDepth.md)
