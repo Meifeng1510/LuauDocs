@@ -359,7 +359,7 @@ The **Sweep Phase** of garbage collection (GC) is responsible for reclaiming mem
    - The sweep phase does not perform marking operations, so it cannot immediately reclaim objects that become unreachable after sweeping starts. The atomic phase ensures that all marking operations are completed before sweeping begins, ensuring that only truly unreachable objects are collected.
 
 2. **Efficient Memory Traversal with Paged Sweeper**
-   - **Paged Sweeper**: The sweep phase uses a paged sweeper, which allocates objects in 16 KB pages. This method improves memory locality by ensuring that consecutively swept objects are contiguous in memory. It also eliminates the need for sweep-related metadata on individual objects, reducing memory overhead.
+   - **Paged Sweeper**: The sweep phase uses a paged sweeper, which allocates objects in 16 KB [pages](LuauGarbageCollectorInDepth.md#luau-heap-structure-and-memory-allocation). This method improves memory locality by ensuring that consecutively swept objects are contiguous in memory. It also eliminates the need for sweep-related metadata on individual objects, reducing memory overhead.
    - **Granularity of Sweeping**: Instead of sweeping objects individually, the sweep phase operates at the granularity of entire pages. Each incremental step of sweeping processes one page at a time, freeing unreachable objects within that page and updating live objects for the next GC cycle.
    - **Improved Performance**: Compared to the linked-list-based sweeping used in Lua and LuaJIT, the paged sweeper is 2-3 times faster, making sweeping more efficient, especially for large heaps.
 
