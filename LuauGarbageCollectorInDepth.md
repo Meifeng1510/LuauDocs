@@ -2,7 +2,9 @@
 
 ---
 
-Garbage collection is an essential aspect of modern programming languages, providing automatic memory management that simplifies development and helps prevent memory-related issues. At its core, garbage collection is the process by which a program identifies and reclaims memory that is no longer in use, ensuring the system remains efficient and responsive. 
+## Introduction
+
+Garbage collection is an essential aspect of modern programming languages, providing automatic memory management that simplifies development and helps prevent memory-related issues. At its core, garbage collection is the process by which a program identifies and reclaims memory that is no longer in use, ensuring the system remains efficient and responsive.
 
 In Luau, this process is particularly important because of its use in environments like Roblox, where performance and memory optimization are critical. Memory management is primarily handled garbage collector (GC), which is responsible for automatically reclaiming memory that is no longer in use. This in-depth guide dives into the internal workings of Luau's garbage collection system, exploring its architecture, goals, and the challenges it overcomes to ensure efficient memory management.
 
@@ -10,9 +12,10 @@ In Luau, this process is particularly important because of its use in environmen
 
 ### Overview of Garbage Collection
 
-Garbage collection is the process of identifying and reclaiming memory occupied by objects that are no longer accessible or needed by the program. Without garbage collection, unused objects would accumulate in memory, leading to memory exhaustion and potential application crashes. 
+Garbage collection is the process of identifying and reclaiming memory occupied by objects that are no longer accessible or needed by the program. Without garbage collection, unused objects would accumulate in memory, leading to memory exhaustion and potential application crashes.
 
 A garbage collector works by:
+
 1. Tracking objects allocated in memory.
 2. Identifying objects that are no longer reachable.
 3. Reclaiming the memory occupied by such objects and making it available for future allocations.
@@ -24,6 +27,7 @@ Modern garbage collectors aim to perform these tasks efficiently, ensuring minim
 ### Interaction Between the Operating System and Garbage Collector
 
 The operating system (OS) provides memory to the Luau runtime in the form of large chunks, often referred to as memory pages. The Luau runtime then manages this memory internally, subdividing it into smaller units required by scripts and their objects. The garbage collector operates within this framework, ensuring that:
+
 - Allocated memory is actively used.
 - Unused memory is reclaimed and returned to the pool of available memory.
 - Memory fragmentation (where memory is scattered in non-contiguous blocks) is minimized.
@@ -37,6 +41,7 @@ Luau's garbage collector operates in cycles, periodically scanning the memory fo
 ### Goals of Luau's Garbage Collector
 
 The design of Luau's garbage collector is driven by several key goals:
+
 1. **Performance:** Minimize the overhead introduced during garbage collection cycles to avoid noticeable performance dips.
 2. **Scalability:** Handle a wide range of workloads, from small scripts to large-scale applications with numerous objects and complex memory requirements.
 3. **Memory Efficiency**: Ensure that unused memory is reclaimed promptly to avoid memory leaks and excessive memory consumption.
@@ -47,21 +52,25 @@ The design of Luau's garbage collector is driven by several key goals:
 ### Challenges in Garbage Collection
 
 While garbage collection simplifies memory management, it also introduces challenges:
+
 1. **Real-Time Constraints:** In scenarios like games, long pauses for garbage collection are unacceptable. The GC must be designed to operate incrementally or concurrently to ensure responsiveness.
 2. **Memory Fragmentation:** Objects of varying sizes can lead to fragmented memory, making it difficult to allocate new objects efficiently.
 3. **Weak References:** Managing weakly-referenced objects (e.g., in weak tables) adds complexity, as these objects must be collected without disrupting references elsewhere.
+
 ---
 
 ### What to Expect in This Guide
-This guide will cover the technical details of Luau’s garbage collection system, including:
 
-- **Core Concepts and Terminology:** A deeper dive into roots, references, and reachability.
-- **Internal Mechanisms:** How Luau tracks memory, detects garbage, and reclaims unused memory.
-- **Incremental vs. Full GC Cycles:** An explanation of Luau’s GC strategy for balancing performance and responsiveness.
-- **Memory Management Challenges and Optimization:** How Luau addresses fragmentation, reference cycles, and memory pressure.
-- **Weak References and Customization:** The role of weak tables and user-controlled GC settings.
+This guide provides an in-depth exploration of the garbage collection system in Luau, including:
 
-By understanding the inner workings of Luau's garbage collector, you can ...
+- **Core Concepts and Terminology**: A comprehensive explanation of garbage collection principles, including object reachability, memory reclamation, and tri-color marking schemes.
+- **Internal Mechanisms**: Detailed workflows for the marking, atomic, and sweeping phases of Luau's incremental, non-generational, non-moving garbage collector.
+- **Memory Optimization Strategies**: Insights into how Luau handles weak references, minimizes memory fragmentation, and addresses memory pressure.
+- **Tuning and Configuration**: Practical guidance on using settings like the GC pacer, step size, multiplier, and goal to optimize garbage collection performance.
+- **Special Cases and Advanced Topics**: A closer look at how Luau processes weak tables, strings, threads, and upvalues, along with techniques to reduce GC pauses.
+- **Real-Time Applications**: Strategies for achieving low latency in interactive environments like games.
+
+By understanding these aspects, you'll gain the knowledge to optimize your applications for performance and memory efficiency within the Luau runtime.
 
 ---
 
@@ -86,7 +95,7 @@ The garbage collector operates on specific strategies to determine which objects
    - If the compiler determines that an object does not escape its scope, it can allocate the object on the stack instead of the heap.  
    - Stack-allocated objects are automatically cleaned up when the stack frame is destroyed, avoiding the need for garbage collection entirely.  
 
-    Escape analysis can significantly reduce the number of objects that need to be managed by the garbage collector, leading to improved performance and reduced memory overhead.
+   Escape analysis can significantly reduce the number of objects that need to be managed by the garbage collector, leading to improved performance and reduced memory overhead.
 
 ---
 
@@ -104,7 +113,7 @@ The garbage collector operates on specific strategies to determine which objects
    The GC runs concurrently with the application, performing the marking and sweeping in parallel. This reduces pause times but can be more complex to implement.  
 
 4. **Generational Garbage Collection:**  
-   Objects are categorized into generations based on their lifespan. Newer objects (short-lived) are collected more frequently, while older objects (long-lived) are collected less often. This is efficient for programs with many short-lived objects.    
+   Objects are categorized into generations based on their lifespan. Newer objects (short-lived) are collected more frequently, while older objects (long-lived) are collected less often. This is efficient for programs with many short-lived objects.  
 
 ---
 
@@ -121,6 +130,7 @@ The **mark-and-sweep** garbage collector is one of the simplest and most widely 
    - Reclaims memory from unmarked objects by marking their space as free.  
 
 Mark-and-sweep garbage collectors can be further classified based on how they execute their cycles:  
+
 - **Stop-the-World Mark-and-Sweep:** The entire program is paused during the GC cycle.  
 - **Incremental Mark-and-Sweep:** The GC works in small steps, interleaving with the program's execution to reduce noticeable pauses.  
 
@@ -143,7 +153,7 @@ By combining these characteristics, Luau's garbage collector is designed to bala
 
 ---
 
-### Garbage Collection Workflow Overview  
+### Garbage Collection Workflow Simplified Overview  
 
 The garbage collection process in Luau follows a structured workflow to identify and reclaim memory occupied by unreachable objects. Below is a step-by-step breakdown of its key stages:  
 
@@ -154,6 +164,7 @@ The garbage collection process in Luau follows a structured workflow to identify
 The **mark phase** is responsible for identifying all reachable (alive) objects in the memory. This phase ensures that objects in use are preserved while leaving unreachable objects unmarked for later cleanup.  
 
 **Steps in the Mark Phase:**  
+
 1. **Start from Roots:**  
    - The GC begins by identifying root references, such as global variables, local variables in stack frames, and function call contexts.  
 2. **Traverse and Mark:**  
@@ -161,6 +172,7 @@ The **mark phase** is responsible for identifying all reachable (alive) objects 
 
 **Incremental Marking:**  
 To minimize the impact on program execution, Luau performs marking incrementally:  
+
 - Instead of marking all objects in one go, the GC distributes the work over multiple steps.  
 - Each step processes a small subset of objects, reducing noticeable pauses in execution.  
 - Marking is performed at the granularity of individual objects.  
@@ -172,10 +184,11 @@ To minimize the impact on program execution, Luau performs marking incrementally
 The **atomic phase** acts as a checkpoint to ensure the marking process is complete and consistent before moving to the next stage.  
 
 **Key Characteristics of the Atomic Phase:**  
+
 - **Indivisible Execution:** The atomic phase runs entirely as a single operation to prevent inconsistencies in the marking process caused by simultaneous program activity.  
 - **Weak Reference Handling:**  
-   - Weak references and weak tables (tables where keys or values are weakly referenced) are processed in this phase.  
-   - Weakly referenced objects that are no longer reachable are cleared, ensuring that weak tables remain valid.  
+  - Weak references and weak tables (tables where keys or values are weakly referenced) are processed in this phase.  
+  - Weakly referenced objects that are no longer reachable are cleared, ensuring that weak tables remain valid.  
 
 This phase ensures that the marking stage is finalized and that all reachable objects are correctly identified.
 
@@ -186,12 +199,14 @@ This phase ensures that the marking stage is finalized and that all reachable ob
 The **sweep phase** is responsible for reclaiming memory occupied by unreachable (unmarked) objects.  
 
 **Steps in the Sweep Phase:**  
+
 1. **Identify Unmarked Objects:**  
-   - Objects that remain unmarked (white) after the mark phase are considered garbage.  
+   - Objects that remain unmarked after the mark phase are considered garbage.  
 2. **Free Memory:**  
    - The GC reclaims the memory occupied by these objects, marking the memory space as free for future use.  
 
 **Paged Sweeping:**  
+
 - Unlike the mark phase, which operates at the granularity of individual objects, sweeping in Luau is performed at the granularity of memory pages.  
 - This **paged sweeper** approach further reduces GC overhead by processing memory in larger chunks, improving efficiency during cleanup.
 
@@ -211,7 +226,7 @@ By following these stages, Luau's garbage collector ensures efficient memory man
 
 ## Detailed Workflow of Garbage Collection
 
-Having explored the general concept of how garbage collection works, let's now take an in-depth look at its implementation process.
+Having explored the general concept of how Luau garbage collection works, let's now take an in-depth look at its implementation process.
 This section will provide a comprehensive breakdown of the inner workings and mechanisms behind garbage collection.
 
 ---
@@ -221,6 +236,7 @@ This section will provide a comprehensive breakdown of the inner workings and me
 The Mark Phase is a critical part of the garbage collection (GC) process in Luau, responsible for identifying reachable (alive) objects and ensuring that only those objects are retained in memory. During this phase, objects that are no longer reachable (unreferenced) are left unmarked, allowing them to be eventually collected and removed. The marking process is performed incrementally to minimize the impact on the program and avoid long pause times. Notably, during mark GC doesn't free any objects, and so the heap size will constantly grow.
 
 #### Object Coloring Scheme
+
 In order to efficiently track the status of objects during the marking process, a color-based system is used:
 
 - **White**: Objects that have not been marked as reachable (garbage).
@@ -228,11 +244,13 @@ In order to efficiently track the status of objects during the marking process, 
 - **Black**: Reachable objects that are fully processed (i.e., all references have been marked).
 
 The tri-color invariant is fundamental to maintaining the correctness of the GC process:
+
 - A black object must never reference a white object, ensuring that all live objects are correctly marked before they are processed.
 
 > Technically, the system employs a four-color scheme. The "white" category is split into **white0** and **white1**, which distinguish between objects allocated during the current GC cycle and those from the previous cycle.
 
 #### Incremental Marking
+
 The marking phase progresses incrementally in small steps, minimizing the interruption to the program. This is achieved through the use of a **gray set**, which is a list of objects that are currently in the gray state. Each incremental step processes one gray object, marking it as black and updating its references as gray if they are white (i.e., unmarked). This ensures that the marking process progresses without overwhelming the system.
 
 The gray set itself is maintained using an **intrusive singly linked list** (gclist), which allows efficient traversal and updating of the objects being processed.
@@ -240,6 +258,7 @@ The gray set itself is maintained using an **intrusive singly linked list** (gcl
 > The gray set exists as gclist field in objects such as functions, tables, threads and protos.
 
 #### Barriers to Maintain the Tri-Color Invariant
+
 To preserve the tri-color invariant during the marking process, barriers are used to ensure correct handling of object references when they are mutated.
 
 - **Forward Barriers**: These barriers immediately mark any newly referenced white objects as gray. An example of this is upvalue writes or the `setmetatable` function, which may create new references to previously unmarked objects.
@@ -247,6 +266,7 @@ To preserve the tri-color invariant during the marking process, barriers are use
 - **Backward Barriers**: These barriers mark black objects as gray if their references change, ensuring that the modified object is re-queued for re-marking. A typical example of this is table writes, where the contents of tables are updated and their references may need to be revisited during the marking phase.
 
 #### Special Cases
+
 The following objects have special handling during the mark phase:
 
 - **Strings**: Strings are treated as gray objects but are never added to the gray set. Once a string is marked as live, it is never processed again.
@@ -256,13 +276,16 @@ The following objects have special handling during the mark phase:
 - **Upvalues**: Open upvalues, which are linked to a thread stack, are never marked as black. They are managed through a global list and processed during the atomic phase. If a thread is dead, its upvalues are closed and unlinked.
 
 #### Two-Phase Marking
+
 In Luau's incremental GC system, the Mark Phase is divided into two parts: the **First-Phase Mark** and the **Second-Phase Mark** (GCSpropagateagain).
 
 ##### First-Phase Mark
+
 - **Purpose**: The first-phase mark is the initial step in marking live objects. It begins by scanning all root objects (e.g., global variables, active threads) and marking all objects reachable from them as live.
 - **Process**: The first-phase mark proceeds incrementally, ensuring that only objects that have not been modified since the last GC cycle are considered. This phase marks all objects reachable from the root set and does so in small chunks to avoid significant pauses in program execution.
 
 ##### Second-Phase Mark (GCSpropagateagain)
+
 - **Purpose**: The second-phase mark, triggered by **GCSpropagateagain**, revisits objects that were modified after the first-phase mark was completed.
 - **Process**: Objects that have been updated after the first-phase mark are reprocessed to ensure they are correctly recognized as live. This ensures that no live objects are missed due to modifications after the first-phase mark. The second-phase mark also proceeds incrementally, minimizing the impact on the program.
 
@@ -274,7 +297,10 @@ The second-phase mark reduces the need for rescanning modified objects in the at
 
 The Atomic Phase is an essential part of the garbage collection (GC) process in Luau, ensuring that all marking operations are finalized and that no interruptions occur during critical operations. This phase guarantees the consistency of the marking process and handles the necessary cleanup of weak references, ensuring that memory is efficiently reclaimed. The atomic phase runs entirely before transitioning into the sweep phase, and its operations are performed without interference from the running program.
 
-#### Purpose and Overview
+> In Roblox, the atomic phase is executed right after the script is done executing in the wait resume state. (Between Pre-Render and Pre-Animation)
+
+#### Atomic Phase Purpose and Overview
+
 - **Indivisible Operations**: The atomic phase performs operations that must occur without interruption, ensuring that the marking process is fully completed and consistent.
 - **Finalization of Marking**: Any marking operations that need to be completed atomically, such as the processing of modified coroutine stacks and weak tables, are handled in this phase.
 - **Thread Handling**: Active threads, which are gray during the marking phase, are rescanned in the atomic phase, while inactive threads are marked black and finalized.
@@ -302,18 +328,17 @@ The Atomic Phase is an essential part of the garbage collection (GC) process in 
    - If an upvalue points to a dead thread or an invalid location, it is closed, and its reference is unlinked.
 
 5. **GC Coloring Scheme**
-   - **White0 and White1**: Objects allocated during the GC cycle are initially white. During the atomic phase, objects that were marked as white in the previous marking phase are considered unreachable and are flagged for collection.
-   - **Gray and Black Objects**: During the atomic phase, all objects that are gray are fully processed, and no gray objects should remain by the end of this phase. All reachable objects should be black, while unreachable objects should remain white.
    - **Differentiating Allocations**: The GC uses a three-bit color encoding (`white0`, `white1`, and black) to track objects and differentiate between those allocated in the current or previous GC cycle, ensuring that the sweep phase only collects objects that are truly unreachable.
+   - **White0 and White1**: Objects marked as white are considered unreachable and are flagged for collection. To differentiate between objects allocated during the current GC cycle and those remaining from the previous cycle, the GC uses two states: `white0` and `white1`.
+   - **Gray Objects**: Gray objects are those that are still being processed and have all three bits unset. This allows the GC to track the "current" white state by flipping the white bit during the atomic stage, distinguishing between objects that were allocated in the previous GC cycle and those allocated in the current cycle.
    - **Exclusive Bit Encoding**: The three bits used to encode object colors are exclusive, meaning each object can only be one of the following:
      - **white0**: An object allocated in the current GC cycle that is still considered unreachable.
      - **white1**: An object allocated in a previous GC cycle that is still considered unreachable.
      - **black**: An object that is reachable and fully processed.
-   - **Gray Objects**: Gray objects are those that are still being processed and have all three bits unset. This allows the GC to track the "current" white state by flipping the white bit during the atomic stage, distinguishing between objects that were allocated in the previous GC cycle (`white1`) and those allocated in the current cycle (`white0`).
-
+   - **Gray and Black Objects**: During the atomic phase, all objects that are gray are fully processed, and no gray objects should remain by the end of this phase. All reachable objects should be black, while unreachable objects should remain white.
 6. **Reduced GC Pauses and Optimizations**
    - **Optimized Atomic Steps**: To minimize GC pause times, the atomic phase has been optimized to handle only the necessary operations. The **remarking phase** reduces the need for rescanning modified objects, and **coroutine incremental marking** limits active coroutine rescans.
-   - **Efficient Weak Table Shrinking**: Shrinkable weak tables help manage object caches more efficiently, reducing memory overhead and improving performance.
+   - **Efficient Table Shrinking**: Shrinkable tables (`"s"` flag in `__mode`) help manage object caches more efficiently, reducing memory overhead and improving performance.
 
 ---
 
@@ -321,7 +346,8 @@ The Atomic Phase is an essential part of the garbage collection (GC) process in 
 
 The **Sweep Phase** of garbage collection (GC) is responsible for reclaiming memory used by unreachable (dead) objects and preparing the heap for the next collection cycle. It follows the marking process, where objects are identified as either reachable or unreachable. In this phase, unreachable objects are freed, and live objects are updated for subsequent GC cycles. The sweep phase operates incrementally and uses a highly efficient **paged sweeper** for optimal performance.
 
-#### Purpose and Overview
+#### Sweep Phase Purpose and Overview
+
 - **Memory Reclamation**: The primary goal of the sweep phase is to free memory occupied by objects that were marked as unreachable during the marking phase.
 - **Efficient Traversal**: Sweeping operates incrementally at the page level, ensuring that memory reclamation is done efficiently without excessive overhead.
 - **Paged Sweeper**: Objects are allocated in 16 KB pages, and the sweeping process works at the granularity of these pages. This approach improves memory locality and reduces metadata overhead compared to linked-list-based sweeping methods.
@@ -343,7 +369,7 @@ The **Sweep Phase** of garbage collection (GC) is responsible for reclaiming mem
      - **white1**: An object allocated in a previous GC cycle that is still considered unreachable.
      - **black**: An object that is reachable and fully processed.
      - **gray**: An object that is in the process of being marked and is yet to be fully scanned.
-   - **Exclusive Bit Encoding**: All color bits are exclusive, meaning an object can only be marked as one of these states at any given time. Gray objects have all three bits unset, indicating they are still being processed. The "current" white bit is flipped during the atomic stage to differentiate between objects that were allocated in the previous cycle (`white1`) and those allocated in the current cycle (`white0`).
+   - **Exclusive Bit Encoding**: All color bits are exclusive, meaning an object can only be marked as one of these states at any given time. Gray objects have all three bits unset, indicating they are still being processed. The "current" white bit is flipped during the atomic stage to differentiate between objects that were allocated in the previous cycle and those allocated in the current cycle.
    - **Recoloring for Next Cycle**: During the sweep phase, objects that were marked as white in the previous mark phase are freed. Any other objects are recolored with the current white bit, preparing them for the next marking cycle.
 
 4. **Incremental Sweeping**
@@ -380,34 +406,27 @@ These steps occur incrementally, with the GC running in small chunks to avoid lo
 The GC assists run during the program’s execution to keep things smooth, and the pacing algorithm
 ensures that memory management does not interfere with program performance.
 
-
 ---
 
 ## Garbage Collection Settings
 
 In Luau, garbage collection (GC) is managed with a set of tunable parameters that allow fine-grained control over the garbage collector's behavior. These settings enable the GC to balance performance and memory management by adapting to the allocation patterns of the application. The key settings revolve around the **GC pacer**, which helps ensure that the GC can keep up with the application's memory allocation while minimizing overhead. The key settings related to GC pacing are the **GC pacer**, **GC goal**, **step size**, and **GC multiplier**. Each of these settings plays a role in how the GC operates in relation to the application’s memory allocation.
 
-#### GC Pacer
+### GC Pacer
 
 The **GC pacer** algorithm is designed to keep the garbage collector in sync with the application’s memory allocation. Its goal is to ensure that the GC can "catch up" to the application allocating garbage, but without putting too much strain on the system. The pacer works by triggering GC steps when certain thresholds are reached, allowing the garbage collector to run incrementally and avoid long pauses. This is achieved by adjusting the GC settings to control when and how frequently the GC steps occur.
 
 To configure the pacer in Luau, three variables are primarily used:
 
-1. **GC Goal**: Defines the target heap size during the atomic phase in relation to the live heap size. For example, if the goal is set to 200%, the heap's maximum size during the atomic phase will be twice the total size of the live objects.
-   
 1. **GC Goal**
    - The **GC goal** determines the target heap size during the atomic phase in relation to the size of live objects. Specifically, it is defined as the worst-case heap size that the garbage collector will allow, based on the size of the live heap.
    - For example, a **200% GC goal** means that the heap’s maximum size during garbage collection may be twice the size of the live objects (i.e., the total memory used by objects that are still reachable).
    - The GC goal helps manage the overall memory footprint of the application during GC cycles. By setting a GC goal, developers can control how much overhead the GC can add to the live heap before it runs again. This setting ensures that the system doesn’t run out of memory while still performing garbage collection.
 
-2. **Step Size**: Specifies how many kilobytes of memory must be allocated before the GC step is triggered. This setting controls how much work the GC will do during each step.
-
 2. **Step Size**
    - The **step size** defines how much memory (in kilobytes) the application must allocate before a GC step is triggered. This acts as a threshold that dictates when the garbage collector should step in and start cleaning up memory.
    - By adjusting the step size, developers can control the frequency of garbage collection. A smaller step size may trigger more frequent GC cycles, which can help keep the heap size under control but may also introduce more frequent pauses. On the other hand, a larger step size can reduce the frequency of GC cycles but may result in longer pauses when GC does occur.
    - The step size setting allows fine-tuning of GC behavior based on the application's memory allocation patterns.
-
-3. **GC Multiplier**: Determines how much the GC should try to mark relative to the allocation rate of the application. A higher multiplier ensures that the GC can keep up with the allocation pace.
 
 3. **GC Multiplier**
    - The **GC multiplier** controls how much the garbage collector tries to mark relative to how much the application has allocated. It adjusts the aggressiveness of the GC in relation to the application’s memory allocation rate.
@@ -417,7 +436,7 @@ To configure the pacer in Luau, three variables are primarily used:
 
 The relationship between the **GC goal** and **GC multiplier** is subtle. It is critical that the **step multiplier** is significantly above 1, as it allows the GC to catch up with the rate of application allocations. The exact behavior of these settings is detailed in the `lua.h` comments for `LUA_GCSETGOAL`.
 
-#### Garbage Collection Operations
+### Garbage Collection Operations
 
 Luau provides several operations to control the behavior of the garbage collector. These operations allow the user to stop, restart, or tune the GC, as well as initiate manual garbage collection steps.
 
@@ -438,7 +457,7 @@ In the default Luau implementation, the global `collectgarbage` can be called wi
 
 In Roblox, the global `collectgarbage` can only be called with the `"count"` option to get the heap size in kilobytes. The global `gcinfo` function behaves the same as `collectgarbage("count")`.
 
-#### Tuning Garbage Collection Parameters
+### Tuning Garbage Collection Parameters
 
 The following operations allow users to fine-tune the GC behavior based on the application's needs:
 
@@ -450,7 +469,7 @@ The following operations allow users to fine-tune the GC behavior based on the a
 
 These operations can be set via `lua_gc` in the `lapi.h` file.
 
-#### Interaction Between Settings
+### Interaction Between Settings
 
 The **GC goal**, **step size**, and **GC multiplier** settings work together to control the GC's pacing and behavior:
 
@@ -460,7 +479,7 @@ The **GC goal**, **step size**, and **GC multiplier** settings work together to 
 
 Together, these settings provide a way to fine-tune garbage collection behavior. Proper tuning allows the GC to keep up with memory allocation without causing excessive pauses, thus balancing memory usage and performance.
 
-#### Recommended Settings
+### Recommended Settings
 
 The `LUA_GCSETSTEPMUL` and `LUA_GCSETGOAL` settings are intricately linked. It is recommended to set the step multiplier **S** within the interval `[100 / (G - 100), 100 + 100 / (G - 100))]` with a minimum value of 150%, where **G** is the GC goal (the ratio of heap size to live data size). For example:
 
@@ -470,9 +489,120 @@ The `LUA_GCSETSTEPMUL` and `LUA_GCSETGOAL` settings are intricately linked. It i
 
 These recommended settings help ensure that the GC can keep pace with the application's allocation rate and minimize overhead.
 
-## Summary
-- To be added
+## Additional Information
 
-## References (to be added)
-- Links to official Luau documentation.
-- Relevant articles and tutorials.
+### Luau Heap Structure and Memory Allocation
+
+Luau employs a size-segregated page structure for its heap management, using both individual pages and system heap allocations to optimize memory usage and performance. This approach ensures efficient handling of both garbage-collected objects (GCO) and regular allocations, tailored to their specific requirements.
+
+---
+
+#### **System Heap Allocation with `frealloc` Callback**  
+
+The `frealloc` callback serves as the central mechanism for memory allocation, resizing, and deallocation in Luau. Its interface is defined as:  
+
+```c
+void* frealloc(void* ud, void* ptr, size_t oldsize, size_t newsize);
+```  
+
+**Key Features of `frealloc`:**  
+
+- Allocates a new memory block: `frealloc(ud, NULL, 0, x)` creates a block of size `x`.  
+- Frees a memory block: `frealloc(ud, p, x, 0)` frees the block `p` and must return `NULL`.  
+- Resizes a memory block: Adjusting the size is guaranteed to succeed if the new size is equal to or smaller than the old size.  
+- Returns `NULL` when memory allocation or resizing fails.  
+
+This callback provides a flexible, albeit slower, fallback for managing memory that doesn’t fit neatly into predefined page structures.
+
+---
+
+#### **Types of Allocations**  
+
+1. **Garbage-Collected Objects (GCO):**  
+   These objects are managed by the garbage collector and are allocated within memory pages for efficient sweeping and reclamation.  
+
+2. **Regular Allocations:**  
+   These include arrays and other non-GC-managed structures. Regular allocations are handled differently, allowing them to be freed or resized in isolation.
+
+---
+
+### **Heap Layout and Allocation Strategy**
+
+#### **Garbage-Collected Objects (GCO)**  
+
+1. **Page-Based Allocation:**  
+   - GCOs are allocated in fixed-size pages (~16 KB).  
+   - Each page contains blocks of the same size, maximizing space utilization.  
+   - Blocks start with a GC header (`GCheader`), storing metadata like object type, mark bits, and GC state.  
+
+2. **Large GCOs:**  
+   - Objects exceeding 512 bytes are allocated in dedicated "small pages" containing a single block.  
+   - This approach sacrifices some memory efficiency but maintains uniformity in page management.  
+
+3. **Page Lists:**  
+   - **Global list (`global_State::allgcopages`):** Links all GCO pages for sweeping.  
+   - **Free list (`global_State::freegcopages`):** Tracks pages with at least one free block, ensuring O(1) allocation.  
+
+4. **Incremental Sweeping:**  
+   - GCO blocks are swept by processing entire pages, with freed blocks retaining their headers for metadata access during sweeping.  
+
+---
+
+#### **Regular Allocations**  
+
+1. **Metadata and Isolation:**  
+   - Regular allocations are prefixed with metadata, including pointers to the page and the next free block within the page.  
+   - Unlike GCOs, these allocations don’t begin with a GC header, allowing isolation and direct deallocation.  
+
+2. **Large Allocations:**  
+   - Objects exceeding 512 bytes bypass page allocation and are directly allocated using the `frealloc` system heap.  
+
+3. **Page Free List:**  
+   - The `global_State::freepages` tracks pages with free blocks, enabling efficient allocation without requiring a global list traversal.  
+
+---
+
+### **Memory Management Techniques**
+
+1. **Size Classes:**  
+   - Block sizes are rounded up into predefined size classes to optimize page usage and reduce fragmentation.  
+   - Size classes are configured using the `SizeClassConfig` strategy, ensuring balanced memory allocation.  
+
+2. **Per-Page Allocation:**  
+   - **Bump Pointer Allocation:** Allocates blocks sequentially within a page.  
+   - **Free List Reuse:** Reuses blocks freed within the page, combining fast allocation with minimal overhead.  
+
+3. **Page Deallocation:**  
+   - When all blocks in a page are freed, the page is immediately deallocated using `frealloc`.  
+   - While this minimizes memory retention, it may lead to excessive allocation traffic. Future enhancements could include a page cache to mitigate this issue.
+
+---
+
+### **Summary**  
+
+Luau’s heap management system combines page-based allocation with a flexible fallback system (`frealloc`) to handle a wide range of memory needs. The distinction between GCO and regular allocations allows for tailored strategies that balance efficiency, simplicity, and performance. With features like incremental sweeping, size classes, and per-page free lists, Luau ensures efficient memory usage while minimizing runtime impact.
+
+## Summary
+
+This guide provides an in-depth exploration of Luau's garbage collection system, emphasizing its
+architecture, goals, and the challenges it overcomes to ensure efficient memory management. By
+understanding these aspects, developers can fine-tune their applications for optimal performance and
+memory management within the Luau runtime. This guide serves as a comprehensive resource for mastering
+Luau's garbage collection, enabling developers to create efficient and responsive applications.  
+
+## Reference  
+
+1. **Garbage Collector Implementation**  
+   - [lgc.cpp - GC implementation in Luau](https://github.com/luau-lang/luau/blob/master/VM/src/lgc.cpp)  
+   - [lgc.h - Header file for GC functions](https://github.com/luau-lang/luau/blob/9a102e2aff99ecaf2ad1e5ca59fc1c893d5e9b7c/VM/src/lgc.h)  
+   - [Performance Guide for Luau](https://luau.org/performance)  
+
+2. **Memory Management**  
+   - [lmem.cpp - Memory allocator and management functions](https://github.com/luau-lang/luau/blob/9a102e2aff99ecaf2ad1e5ca59fc1c893d5e9b7c/VM/src/lmem.cpp)  
+
+3. **API References**  
+   - [lapi.cpp - Luau API implementation (L1056)](https://github.com/luau-lang/luau/blob/7d4033071abebe09971b410d362c00ffb3084afb/VM/src/lapi.cpp#L1056)  
+   - [lua.h - API definitions (L249)](https://github.com/luau-lang/luau/blob/9a102e2aff99ecaf2ad1e5ca59fc1c893d5e9b7c/VM/include/lua.h#L249)  
+
+4. **Task Scheduling and Profiling**  
+   - [Roblox MicroProfiler Task Scheduler](https://create.roblox.com/docs/studio/microprofiler/task-scheduler)
