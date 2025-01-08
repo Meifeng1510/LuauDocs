@@ -53,4 +53,5 @@
 ---
 
 [Part 2 Solution](LuauGarbageCollectionQuizPart2Solution.md)
+
 [Part 1](LuauGarbageCollectionQuizPart1.md)
