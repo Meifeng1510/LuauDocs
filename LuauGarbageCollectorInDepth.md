@@ -68,7 +68,6 @@ This guide provides an in-depth exploration of the garbage collection system in 
 - **Memory Optimization Strategies**: Insights into how Luau handles weak references, minimizes memory fragmentation, and addresses memory pressure.
 - **Tuning and Configuration**: Practical guidance on using settings like the GC pacer, step size, multiplier, and goal to optimize garbage collection performance.
 - **Special Cases and Advanced Topics**: A closer look at how Luau processes weak tables, strings, threads, and upvalues, along with techniques to reduce GC pauses.
-- **Real-Time Applications**: Strategies for achieving low latency in interactive environments like games.
 
 By understanding these aspects, you'll gain the knowledge to optimize your applications for performance and memory efficiency within the Luau runtime.
 
@@ -434,11 +433,17 @@ To configure the pacer in Luau, three variables are primarily used:
    - It is critical that the GC multiplier is set significantly above 1. This allows the garbage collector to effectively “pace” itself and perform garbage collection at a rate that matches the application’s allocation, helping to avoid delays and memory buildup.
    - The GC multiplier and GC goal are tightly linked, with their interaction influencing how quickly the garbage collector will run and how much memory it will allow the application to consume before it takes action.
 
-The relationship between the **GC goal** and **GC multiplier** is subtle. It is critical that the **step multiplier** is significantly above 1, as it allows the GC to catch up with the rate of application allocations. The exact behavior of these settings is detailed in the `lua.h` comments for `LUA_GCSETGOAL`.
+> The exact behavior of these settings is detailed in the `lua.h` (see reference) comments for `LUA_GCSETGOAL`.
 
 ### Garbage Collection Operations
 
 Luau provides several operations to control the behavior of the garbage collector. These operations allow the user to stop, restart, or tune the GC, as well as initiate manual garbage collection steps.
+
+- **LUA_GCSETGOAL**: Tunes the GC goal, which is the ratio between the total heap size and the amount of live data.
+  
+- **LUA_GCSETSTEPMUL**: Tunes the step multiplier, which determines how much GC work is done relative to the application's allocation rate.
+
+- **LUA_GCSETSTEPSIZE**: Tunes the step size in kilobytes. This is the amount of memory that needs to be allocated before the GC step is triggered.
 
 - **LUA_GCSTOP**: Stops the incremental garbage collection process.
 - **LUA_GCRESTART**: Restarts the incremental garbage collection process.
@@ -456,28 +461,6 @@ The default argument for `collectgarbage` is `"count"`.
 In the default Luau implementation, the global `collectgarbage` can be called with the argument `"collect"` to trigger `LUA_GCCOLLECT`, which runs a garbage collection cycle. The argument `"count"` can also be passed to `collectgarbage`, which behaves the same as `gcinfo`, returning the heap size in kilobytes by calling `LUA_GCCOUNT`.
 
 In Roblox, the global `collectgarbage` can only be called with the `"count"` option to get the heap size in kilobytes. The global `gcinfo` function behaves the same as `collectgarbage("count")`.
-
-### Tuning Garbage Collection Parameters
-
-The following operations allow users to fine-tune the GC behavior based on the application's needs:
-
-- **LUA_GCSETGOAL**: Tunes the GC goal, which is the ratio between the total heap size and the amount of live data. The GC goal is expressed as a percentage, with the default value being 200%, meaning the heap is allowed to grow to twice the size of live data before triggering collection. A higher GC goal allows for a larger heap, while a lower goal causes the GC to run more frequently.
-  
-- **LUA_GCSETSTEPMUL**: Tunes the step multiplier, which determines how much GC work is done relative to the application's allocation rate. By default, the step multiplier is set to 200%, meaning the GC will try to mark 2x the amount of memory allocated. This multiplier ensures that the GC can catch up with the application's allocation pace.
-
-- **LUA_GCSETSTEPSIZE**: Tunes the step size in kilobytes. This is the amount of memory that needs to be allocated before the GC step is triggered. By adjusting the step size, users can control the frequency of GC steps, allowing for finer control over the GC's workload.
-
-These operations can be set via `lua_gc` in the `lapi.h` file.
-
-### Interaction Between Settings
-
-The **GC goal**, **step size**, and **GC multiplier** settings work together to control the GC's pacing and behavior:
-
-- The **GC goal** defines the target heap size during the atomic phase, limiting the amount of heap growth allowed before the garbage collector must step in.
-- The **step size** sets a threshold for how much memory the application must allocate before the GC is triggered.
-- The **GC multiplier** adjusts how aggressively the GC tries to mark objects in response to the application’s memory allocation.
-
-Together, these settings provide a way to fine-tune garbage collection behavior. Proper tuning allows the GC to keep up with memory allocation without causing excessive pauses, thus balancing memory usage and performance.
 
 ### Recommended Settings
 
