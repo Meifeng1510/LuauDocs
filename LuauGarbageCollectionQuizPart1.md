@@ -21,7 +21,7 @@
     c) Black  
     d) Green  
 
-4. What is the default color assigned to objects during the Mark Phase in Luau?
+4. What is the default color assigned to objects during the Mark Phase in Luau?  
     a) White
     b) Gray
     c) Black
