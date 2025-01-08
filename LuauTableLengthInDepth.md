@@ -366,7 +366,7 @@ This ensures efficient memory usage while maintaining performance.
 
 To understand how the optimal size is calculated, let’s examine the `rehash` function, which is responsible for computing the new size of the table. The function dynamically adjusts the array and hash portions based on the distribution of elements in the table.
 
-#### Example Code: Reallocation Logic
+#### Example Code: Rehash Logic
 
 ```cpp
 static void rehash(lua_State* L, Table* t, const TValue* ek)
