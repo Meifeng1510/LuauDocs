@@ -152,8 +152,8 @@ Each portion has a certain amount of **allocated memory**, which determines how 
 
 Tables in Luau start with size 0 and grow as needed. When new elements are added, Luau:
 1. Checks if there's enough space
-2. Reallocates memory if needed
-3. Calculates new sizes for both array and hash portions
+2. If not, calculates new sizes for both array and hash portions
+3. Reallocates memory if needed
 
 The reallocation process is expensive, so Luau doesn't allocate exact sizes. Instead, it balances between:
 - Avoiding frequent reallocations by allocating extra spaces for further values.
@@ -165,10 +165,9 @@ When reallocation occurs, Luau's `rehash` function determines the optimal sizes 
 
 1. **Counting Phase**
    - Counts elements that could be stored in the array portion. These will be referred to as a `candidate`. These indices are positive integers with non-`nil` values.
-   - Groups counts into power-of-2 ranges (1, 2, 3-4, 5-8, 9-16, etc.)
 
 2. **Size Computation**
-   - Finds the largest power of 2 (n) where more than half the slots between 1 and n are used. This is known as the optimal array size.
+   - Finds the largest power of 2 index (n) where more than half the slots between 1 and n are used. This is known as the optimal array size.
 
 3. **Size Adjustment**
    - Increment the size by 1 repeatedly until `tbl[size + 1]` is `nil`.  
