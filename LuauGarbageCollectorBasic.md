@@ -43,7 +43,7 @@ When you declare a variable in Luau, you create a reference to an object in memo
 local num = 123
 ```
 
-In this case, a new *object is created to hold the value `123`, and the variable `num` acts as a reference to that object.
+In this case, a new object is created to hold the value `123`, and the variable `num` acts as a reference to that object.
 Whenever you use `num`, you are using it as a reference to the object holding the value `123`.
 
 > Internally, the value `123` is stored as `TValue`, a collectible object.
@@ -60,6 +60,7 @@ Here, the value `123` is no longer referenced by any variable. This makes it a "
 because it lacks any *strong references. Without a reference, the memory occupied by this value is considered unused.
 
 >In Luau, there are 2 types of references:
+>
 >1. **Strong References**: References that will prevent garbage collector from marking it as unreachable e.g., variable, table.
 >2. **Weak References**: References from weak tables, which do not prevent the object from being garbage collected (table with `__mode` metamethod).
 
@@ -264,41 +265,10 @@ end)
 #### Tables
 
 Tables are another common source of memory leaks in Roblox.
-A typical issue arises when developers unintentionally create
-circular references or retain references to unused data.
+A typical issue arises when developers create persistent table
+retaining references to unused data.
 
 Consider this example:
-
-```lua
--- Memory leak example with cyclic tables
-local Data = {}
-Data["self"] = Data -- Circular reference
-
--- Data is set to nil, but the circular reference prevents garbage collection
-Data = nil
-```
-
-In this case, the table `Data` contains a reference to itself. When `Data` is set to `nil`,
-the circular reference prevents it from being garbage collected, resulting in a memory leak.
-
-**Solution**: Avoid circular references and clean up tables properly:
-
-```lua
--- Properly managing table references
-local Data = {}
-Data["value"] = 42 -- No circular reference
-```
-
-```lua
-local Data = {}
-Data["self"] = Data -- Circular reference, avoid if possible
-
--- later
-table.clear(Data) -- Clean up the table before setting it to nil
-Data = nil
-```
-
-Another example:
 
 ```lua
 -- Memory leak example with persistent Tables
@@ -347,7 +317,7 @@ retain unused references, allowing the garbage collector to clean up properly.
 
 Creating too many objects in Luau can lead to frequent garbage collection cycles, which may degrade performance. To minimize object creation:
 
-- **Reuse objects where possible:** Instead of creating new tables, consider clearing and reusing existing ones.
+- **Reuse objects where possible:** Instead of creating new tables or instances, consider clearing and reusing existing ones.
 - **Batch operations:** Group operations that require temporary objects to reduce the number of objects created.
 - **Avoid unnecessary allocations:** For example, use string concatenation sparingly and prefer table-based string building with `table.concat`.
 
@@ -356,7 +326,6 @@ Creating too many objects in Luau can lead to frequent garbage collection cycles
 Improper reference management can prevent objects from being garbage collected, leading to memory leaks. To manage references effectively:
 
 - **Remove unused references:** Explicitly set table's value to `nil` and clear the table when they are no longer needed.
-- **Avoid circular references:** Structures like tables referencing each other can create cycles that prevent garbage collector from handling.
 - **Monitor global variables:** Ensure that temporary objects do not inadvertently remain accessible through global scope.
 
 ### Reduce GC Load
@@ -389,7 +358,7 @@ Roblox provides [several tools](https://create.roblox.com/docs/studio/optimizati
 
 ## Summary
 
-Understanding the garbage collector in Luau is essential for efficient memory management and optimal application performance. By leveraging its automatic memory management, developers can focus on creating robust and scalable applications without worrying about manual memory allocation or deallocation. However, relying solely on the garbage collector is not foolproof—poor coding practices, such as unintentional reference retention or circular dependencies, can still lead to memory leaks and performance issues.
+Understanding the garbage collector in Luau is essential for efficient memory management and optimal application performance. By leveraging its automatic memory management, developers can focus on creating robust and scalable applications without worrying about manual memory allocation or deallocation. However, relying solely on the garbage collector is not foolproof—poor coding practices, such as unintentional reference retention, can still lead to memory leaks and performance issues.
 
 To ensure efficient use of memory and avoid common pitfalls:
 
