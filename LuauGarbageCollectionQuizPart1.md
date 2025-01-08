@@ -126,4 +126,5 @@
 ---
 
 [Part 1 Solution](LuauGarbageCollectionQuizPart1Solution.md)
+
 [Part 2](LuauGarbageCollectionQuizPart2.md)
