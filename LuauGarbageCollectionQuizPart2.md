@@ -36,7 +36,7 @@
    
 4. What is **GC pacer** algorithm and their function?
 
-5. What is the significance of using a **coloring scheme** in garbage collection? List all the colors used and their function.  
+5. What is the significance of using a **coloring scheme** in garbage collection?
 
 ---
 
