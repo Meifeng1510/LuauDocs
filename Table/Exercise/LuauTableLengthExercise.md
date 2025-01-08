@@ -88,4 +88,5 @@ print(#tbl)
 
 ---
 
-Solution can be verified by executing the code
+The solution can be verified by executing the code
+Guides: [Basic overview](Table/Guide/LuauTableLengthOverview.md), [In-depth view](Table/Guide/LuauTableLengthInDepth.md)
