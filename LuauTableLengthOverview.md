@@ -287,6 +287,10 @@ The function `rehash` (used for re-allocation) is triggered when `newkey` functi
 
 ## Conclusion
 
-Understanding how tables and the `#` operator work in Luau is crucial for writing efficient scripts. By knowing how the array boundary is determined and how memory allocation works, you can optimize your use of tables and avoid unexpected behavior.
+By knowing how the array boundary is determined and how memory allocation works, you can optimize your use of tables and avoid unexpected behavior.
 
 For more details, you can explore the [Luau source code](https://github.com/luau-lang/luau/blob/master/VM/src/ltable.cpp) or check the [in-depth guide](LuauTableLengthInDepth.md).
+
+## References
+
+[ltable.cpp](https://github.com/luau-lang/luau/blob/master/VM/src/ltable.cpp)
