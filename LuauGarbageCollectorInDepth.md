@@ -6,7 +6,7 @@
 
 Garbage collection is an essential aspect of modern programming languages, providing automatic memory management that simplifies development and helps prevent memory-related issues. At its core, garbage collection is the process by which a program identifies and reclaims memory that is no longer in use, ensuring the system remains efficient and responsive.
 
-In Luau, this process is particularly important because of its use in environments like Roblox, where performance and memory optimization are critical. Memory management is primarily handled garbage collector (GC), which is responsible for automatically reclaiming memory that is no longer in use. This in-depth guide dives into the internal workings of Luau's garbage collection system, exploring its architecture, goals, and the challenges it overcomes to ensure efficient memory management.
+In Luau, this process is particularly important because of its use in environments like Roblox, where performance and memory optimization are critical. Memory management is primarily handled by the garbage collector (GC), which is responsible for automatically reclaiming memory that is no longer in use. This in-depth guide dives into the internal workings of Luau's garbage collection system, exploring its architecture, goals, and the challenges it overcomes to ensure efficient memory management.
 
 ---
 
