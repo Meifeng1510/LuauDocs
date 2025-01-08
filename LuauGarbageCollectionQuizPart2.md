@@ -1,7 +1,7 @@
 ## Part 2
 
-- [ ]
-- [x]
+- [ ] unchecked
+- [x] checked
 
 1. **Which of the following best describes why Luau uses both forward and backward barriers in its garbage collection system?**  
    - A) Forward barriers are faster, while backward barriers are more thorough.  
