@@ -6,7 +6,7 @@ A collection of markdown files I wrote
 
 ---
 
-# Directory
+## Directory
 
 ### About garbage collection:  
 - **Guide**
