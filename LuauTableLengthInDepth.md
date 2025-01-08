@@ -1136,4 +1136,5 @@ um no
 ## References
 
 [ltable.cpp](https://github.com/luau-lang/luau/blob/master/VM/src/ltable.cpp) - Luau source code
+
 [lobject.h](https://github.com/luau-lang/luau/blob/9a102e2aff99ecaf2ad1e5ca59fc1c893d5e9b7c/VM/src/lobject.h) - Structure information
