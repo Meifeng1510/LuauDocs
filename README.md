@@ -1,4 +1,4 @@
-# docs?
+# Docs?
 
 ---
 
@@ -6,9 +6,9 @@ A collection of markdown files I wrote
 
 ---
 
-## Directory
+### Directory
 
-### About garbage collection:  
+#### About garbage collection:  
 - **Guide**
   - [Basic info on garbage collector](GarbageCollection/Guide/LuauGarbageCollectorBasic.md)  
   - [A more in-depth look into garbage collector](GarbageCollection/Guide/LuauGarbageCollectorInDepth.md)  
@@ -18,7 +18,7 @@ A collection of markdown files I wrote
   - [Part 2](GarbageCollection/Quiz/LuauGarbageCollectionQuizPart2.md)  
   - [Part 2 Solution](GarbageCollection/Quiz/LuauGarbageCollectionQuizPart2Solution.md)  
 
-### About table:  
+#### About table:  
 - **How table length is calculated**  
   - **Guide**
     - [Basic table length calculation](Table/Guide/LuauTableLengthInDepth.md)  
