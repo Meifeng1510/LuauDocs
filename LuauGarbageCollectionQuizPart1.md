@@ -22,10 +22,10 @@
     d) Green  
 
 4. What is the default color assigned to objects during the Mark Phase in Luau?  
-    a) White
-    b) Gray
-    c) Black
-    d) Green
+    a) White  
+    b) Gray  
+    c) Black  
+    d) Green  
 
 5. What does the **atomic phase** ensure?
    a) Allocated memory is optimized  
@@ -93,7 +93,7 @@
    c) Rescan black objects  
    d) Update references to relocated objects  
 
-    *What is a key advantage of the **paged sweeper**?  
+16. What is a key advantage of the **paged sweeper**?  
    a) Reduces memory fragmentation  
    b) Allocates objects in linked lists  
    c) Frees memory in 32 KB chunks  
