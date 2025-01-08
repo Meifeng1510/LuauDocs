@@ -596,6 +596,8 @@ understanding these aspects, developers can fine-tune their applications for opt
 memory management within the Luau runtime. This guide serves as a comprehensive resource for mastering
 Luau's garbage collection, enabling developers to create efficient and responsive applications.  
 
+If you would like to challenge yourself with what you learned in this guide, here is a [quiz](LuauGarbageCollectionQuizPart1.md) you can take.
+
 ## Reference  
 
 1. **Garbage Collector Implementation**  
