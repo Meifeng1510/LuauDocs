@@ -3,7 +3,6 @@
 --- 
 
 1. What is the primary purpose of garbage collection in programming languages?  
-
     a) To allocate more memory  
     b) To reclaim unused memory  
     c) To optimize CPU usage  
@@ -27,7 +26,7 @@
     c) Black  
     d) Green  
 
-5. What does the **atomic phase** ensure?
+5. What does the **atomic phase** ensure?  
    a) Allocated memory is optimized  
    b) Marking operations are finalized and consistent  
    c) Weak objects are deferred  
@@ -36,7 +35,7 @@
 6. What does `collectgarbage()` do in Roblox?  
     a) Return heap size in bytes  
     b) Return heap size in kilobytes  
-    c) Invoke garbage collection
+    c) Invoke garbage collection  
     d) None of the above  
 
 7. What is the purpose of the **paged sweeper** in the Sweep Phase?  
