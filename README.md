@@ -1,4 +1,4 @@
-# LuauDocs
+# Some docs
 
 ---
 
