@@ -1,7 +1,6 @@
 ## Part 2
 
-- [ ] unchecked
-- [x] checked
+---
 
 1. **Which of the following best describes why Luau uses both forward and backward barriers in its garbage collection system?**  
    - A) Forward barriers are faster, while backward barriers are more thorough.  
@@ -37,21 +36,19 @@
    
 4. What is **GC pacer** algorithm and their function?
 
-5. 
+5. What is the significance of using a **coloring scheme** in garbage collection? List all the colors used and their function.  
 
 ---
 
-6. **What is the significance of using a **coloring scheme** in garbage collection? List all the colors used and their function.**  
+6. **Explain the tri-color invariant used in Luau's garbage collector and how forward and backward barriers help maintain this invariant. Provide examples of scenarios where each type of barrier would be applied.**
 
-7. **Explain the tri-color invariant used in Luau's garbage collector and how forward and backward barriers help maintain this invariant. Provide examples of scenarios where each type of barrier would be applied.**
+7. **Describe the role of the atomic phase in Luau's garbage collection cycle. Why is this phase necessary, and what tasks are completed during this stage that cannot be done incrementally?**
 
-8. **Describe the role of the atomic phase in Luau's garbage collection cycle. Why is this phase necessary, and what tasks are completed during this stage that cannot be done incrementally?**
+8. **Luau's garbage collector uses a "gray set" to track incremental marking progress. Explain how this set is managed during the GC cycle and the significance of the second-phase mark (`GCSpropagateagain`) in maintaining efficiency.**
 
-9. **Luau's garbage collector uses a "gray set" to track incremental marking progress. Explain how this set is managed during the GC cycle and the significance of the second-phase mark (`GCSpropagateagain`) in maintaining efficiency.**
+9. **Weak tables require special handling in Luau's garbage collector. Discuss the challenges these tables pose for incremental marking and explain how weak entries are processed during the atomic phase.**
 
-10. **Weak tables require special handling in Luau's garbage collector. Discuss the challenges these tables pose for incremental marking and explain how weak entries are processed during the atomic phase.**
-
-11. **Upvalues in Luau can be open or closed. Detail the unique challenges open upvalues present to the garbage collector and the special handling they require during the atomic phase. How does Luau ensure that these upvalues are correctly marked or closed?**
+10. **Upvalues in Luau can be open or closed. Detail the unique challenges open upvalues present to the garbage collector and the special handling they require during the atomic phase. How does Luau ensure that these upvalues are correctly marked or closed?**
 
 ---
 
