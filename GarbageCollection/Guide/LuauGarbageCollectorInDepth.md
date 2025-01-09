@@ -274,8 +274,8 @@ To preserve the tri-color invariant during the marking process, barriers are use
 #### Special Cases
 
 The following objects have special handling during the mark phase:
-
-- **Strings**: Strings are treated as gray objects but are never added to the gray set. Once a string is marked as live, it is never processed again.
+are semantically black
+- **Strings**: Strings are semantically black. They are marked as gray objects but are never added to the gray set. Once a string is marked as live, it is never processed again.
   
 - **Threads/Coroutine**: Active threads are treated as gray during the marking phase, and their references are rescanned during the atomic phase. Inactive threads, however, are marked black once they have been fully processed, limiting the active rescans and reducing the overall workload during marking. API calls that modify a thread's stack ensure that the thread is marked as gray if necessary.
 
@@ -497,11 +497,13 @@ These recommended settings help ensure that the GC can keep pace with the applic
 
 ## Additional Information
 
-### Luau Heap Structure and Memory Allocation
+### Luau Heap Structure, Memory Allocation, and Fragmentation
 
-Luau employs a size-segregated page structure for its heap management, using both individual pages and system heap allocations to optimize memory usage and performance. This approach ensures efficient handling of both garbage-collected objects (GCO) and regular allocations, tailored to their specific requirements.
+Luau employs a size-segregated page structure for its heap management, using both individual pages and system heap allocations to optimize memory usage, performance, and reduce fragmentation. By combining a size-segregated page structure with a progressive size class system, Luau balances performance, memory efficiency, and minimal overhead, ensuring efficient handling of both garbage-collected objects (GCO) and regular allocations.
 
 ---
+
+### Heap Structure and Allocation Strategy
 
 #### **System Heap Allocation with `frealloc` Callback**  
 
@@ -568,11 +570,21 @@ This callback provides a flexible, albeit slower, fallback for managing memory t
 
 ---
 
+### **Free List Management**
+- **Per-Page Free Lists**:
+  - Each page maintains a free list (`freeList`) of deallocated blocks. This ensures efficient reuse of freed memory for future allocations of the same size class.
+  - Pages also use a bump pointer (`freeNext`) for initial allocations, reducing setup overhead and fragmentation.
+
+- **Global Free Lists**:
+  - Free pages for both GCO and non-GCO blocks are tracked using global free lists (`freegcopages` and `freepages`), ensuring O(1) allocation for pages with available space.
+
+---
+
 ### **Memory Management Techniques**
 
 1. **Size Classes:**  
    - Block sizes are rounded up into predefined size classes to optimize page usage and reduce fragmentation.  
-   - Size classes are configured using the `SizeClassConfig` strategy, ensuring balanced memory allocation.  
+   - Size classes are configured using the `SizeClassConfig`, ensuring balanced memory allocation.  
 
 2. **Per-Page Allocation:**  
    - **Bump Pointer Allocation:** Allocates blocks sequentially within a page.  
@@ -584,9 +596,60 @@ This callback provides a flexible, albeit slower, fallback for managing memory t
 
 ---
 
-### **Summary**  
+### **Memory Fragmentation**
 
-Luau’s heap management system combines page-based allocation with a flexible fallback system (`frealloc`) to handle a wide range of memory needs. The distinction between GCO and regular allocations allows for tailored strategies that balance efficiency, simplicity, and performance. With features like incremental sweeping, size classes, and per-page free lists, Luau ensures efficient memory usage while minimizing runtime impact.
+Memory fragmentation occurs when free memory is divided into small, non-contiguous blocks, making it difficult to allocate large blocks of memory even though sufficient total free memory exists. Luau's memory management system incorporates various strategies, including a **size class system**, to reduce fragmentation and maintain efficient memory usage.
+
+### **Fragmentation Management**
+
+Fragmentation is an inherent challenge in memory allocation. Luau addresses this through several techniques:
+
+1. **Minimizing Internal Fragmentation**:
+   - Uniform block sizes within pages ensure minimal unused space within allocated memory blocks.
+
+2. **Reducing External Fragmentation**:
+   - The progressive size class system groups similar allocation sizes, reducing the likelihood of non-contiguous free memory.
+
+3. **Large Allocations**:
+   - Blocks >512 bytes are isolated in dedicated pages or allocated directly, preventing fragmentation of smaller pages.
+
+4. **Free List Reuse**:
+   - Freed blocks are retained in per-page free lists for quick reuse, reducing allocation churn.
+
+---
+
+
+### **Size Class System**
+Luau's size classes are defined using a progressive scheme to balance internal and external fragmentation:
+
+- **Progressive Alignment**:
+  - Block sizes are aligned to multiples of 8 bytes, satisfying pointer alignment requirements and improving memory efficiency.
+  - The alignment increases progressively for larger sizes:
+    - **8-byte increments** for block sizes between 8 and 64 bytes.
+    - **16-byte increments** for block sizes between 64 and 256 bytes.
+    - **32-byte increments** for block sizes between 256 and 512 bytes.
+    - **64-byte increments** for block sizes between 512 and 1024 bytes.
+  - For example, a requested block of 70 bytes is rounded up to 80 bytes to fit within the nearest size class.
+
+- **Lookup Optimization**:
+  - The `classForSize` array maps block sizes directly to their corresponding size class, ensuring O(1) lookup for allocation.
+  - Gaps in the size lookup table are filled to ensure all block sizes map to the nearest larger size class.
+
+This design reduces external fragmentation by ensuring that memory is allocated in predictable, well-distributed size classes, preventing unused gaps from forming between allocations.
+
+---
+
+### Fragmentation Challenges
+- **Inter-Page Fragmentation**:
+  - Fragmentation between pages can occur when allocation patterns result in uneven usage across pages of different size classes.
+
+- **Large Allocations**:
+  - Dedicated pages for large blocks introduce a slight overhead due to the unused space in these pages and the additional page header.
+  
+- **Allocation Traffic**:
+  - Frequent deallocations and reallocations may increase traffic to the system heap. A **page caching system** could mitigate this by retaining recently freed pages.
+
+---
 
 ## Summary
 
