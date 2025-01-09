@@ -88,7 +88,7 @@ The garbage collector operates in cycles, periodically checking for objects that
 Once identified, these objects are collected, and their memory is freed. This ensures that the program
 does not suffer from memory leaks and maintains efficient memory usage.
 
-If you would like more details, check out the [In-depth guide on how Luau garbage collector work](LuauGarbageCollectorIndepth)
+If you would like more details, check out the [In-depth guide on how Luau garbage collector work](LuauGarbageCollectorInDepth.md)
 
 ---
 
