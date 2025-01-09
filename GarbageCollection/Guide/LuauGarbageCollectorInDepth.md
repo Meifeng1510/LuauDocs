@@ -84,7 +84,7 @@ The garbage collector operates on specific strategies to determine which objects
 ### Basic Garbage Collector Strategies  
 
 1. **Tracing Garbage Collection:**  
-   This approach determines reachability starting from a set of root objects (e.g., global variables, local variables, stack frames). If an object can be reached by traversing references from the roots, it is considered "alive." Tracing garbage collectors use algorithms like **mark-and-sweep** or **mark-and-compact** to identify and clean up unreachable objects.  
+   This approach determines reachability starting from a set of root objects (e.g., global state, main thread, global table, and registry). If an object can be reached by traversing references from the roots, it is considered "alive." Tracing garbage collectors use algorithms like **mark-and-sweep** or **mark-and-compact** to identify and clean up unreachable objects.  
 
 2. **Reference Counting:**  
    In this strategy, each object keeps a count of the references pointing to it. When the reference count drops to zero (i.e., no references point to the object), the object is immediately deallocated. However, this method struggles with circular references, where objects reference each other but are no longer reachable.  
@@ -128,7 +128,7 @@ The garbage collector operates on specific strategies to determine which objects
 The **mark-and-sweep** garbage collector is one of the simplest and most widely used algorithms due to its straightforward implementation and effectiveness. It operates in two distinct phases:  
 
 1. **Mark Phase:**  
-   - Starts from root references (global variables, function call stacks, etc.).  
+   - Starts from root references (global state, main thread, global table, etc.).  
    - Traverses all references and marks objects that are reachable.  
 
 2. **Sweep Phase:**  
