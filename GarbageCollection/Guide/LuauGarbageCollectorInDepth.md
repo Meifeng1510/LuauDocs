@@ -600,6 +600,8 @@ This callback provides a flexible, albeit slower, fallback for managing memory t
 
 Memory fragmentation occurs when free memory is divided into small, non-contiguous blocks, making it difficult to allocate large blocks of memory even though sufficient total free memory exists. Luau's memory management system incorporates various strategies, including a **size class system**, to reduce fragmentation and maintain efficient memory usage.
 
+---
+
 ### **Fragmentation Management**
 
 Fragmentation is an inherent challenge in memory allocation. Luau addresses this through several techniques:
