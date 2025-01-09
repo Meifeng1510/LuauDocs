@@ -16,7 +16,7 @@
 
 3. **How does the Luau garbage collector handle strings during incremental marking?**  
    - A) Strings are marked as black and added to the gray set.  
-   - B) Strings are treated as semantically black but are never marked as part of a gray list.  
+   - B) Strings are treated as semantically black but are never marked as part of a gray set.  
    - C) Strings are treated as weak references and processed during the atomic phase.  
    - D) Strings are marked as white and recolored during the sweeping phase.  
 
