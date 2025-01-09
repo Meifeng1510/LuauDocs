@@ -274,7 +274,7 @@ To preserve the tri-color invariant during the marking process, barriers are use
 #### Special Cases
 
 The following objects have special handling during the mark phase:
-are semantically black
+
 - **Strings**: Strings are semantically black. They are marked as gray objects but are never added to the gray set. Once a string is marked as live, it is never processed again.
   
 - **Threads/Coroutine**: Active threads are treated as gray during the marking phase, and their references are rescanned during the atomic phase. Inactive threads, however, are marked black once they have been fully processed, limiting the active rescans and reducing the overall workload during marking. API calls that modify a thread's stack ensure that the thread is marked as gray if necessary.
