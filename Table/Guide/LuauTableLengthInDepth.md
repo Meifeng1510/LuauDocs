@@ -63,7 +63,8 @@ int luaH_getn(Table* t)
 The `getn` function follows a straightforward process:
 
 1. **Retrieve Cached Boundary:**
-   - The function first calls `getaboundary`, which retrieves the cached size of the table or the allocated size if it’s the first time `getn` is called on the table.
+   - The function first calls `getaboundary`, which retrieves the cached boundary of the table.
+   - If the cached boundary of the table is 0, the allocated size will be returned. This happens if `getn` has never been called on the table or if the last `getn` call returned 0
 
    Example:
    ```lua
@@ -132,7 +133,7 @@ static int updateaboundary(Table* t, int boundary)
 
 #### Key Behavior:
 
-- The current and new boundary must lower than `sizearray`
+- The current and the new boundary must be lower than the `sizearray`
 - If `array[boundary - 1]` is `nil`, but `array[boundary - 2]` is non-`nil`:
   - Update the boundary to `boundary - 1`.
 - If `array[boundary]` is non-`nil` and `array[boundary + 1]` is `nil`:
@@ -309,24 +310,51 @@ If the table is created directly, such as:
 ```lua
 local tbl = {1, 2, nil, 4}
 ```
+or
+```lua
+local tbl = {[1] = 1, [2] = 2, [3] = nil, [4] = 4}
+```
 
-there isn't an easy way to retrieve the internally allocated size. So, how do we know how much memory is allocated for the array portion?
+It isn't as obvious how the size has been allocated internally. So, how do we know how much memory is allocated for the array portion?
 
 ---
 
 ### Internally Allocated Size in Luau
 
-Let's first start by analyzing the behaviour of `table.create`, whe allocated size of the array portion can be observed:
+Let's first start by analyzing the behavior of `table.create`, where the allocated size of the array portion can be observed:
 
 ```lua
 local tbl = table.create(size)
 
 print(#tbl) -- Output: 0 (initialized with nil values)
 tbl[size] = true
-print(#tbl) -- Output: size (boundary updated with non-nil value)
+print(#tbl) -- Output: size (the end of the array is a valid boundary)
 ```
 
-If a table is created directly (e.g., `local tbl = {1, 2, nil, 4}`), there is no direct way to retrieve the allocated size.
+So, the internally allocated size is exactly equal to the size we specified, which we verified by looking at the return value of `getn`.
+
+Now, what if we declare the table as a list?
+
+```lua
+local tbl = {nil, nil, nil, nil, nil, nil, nil, nil} -- Initialized with 8 nil values
+print(#tbl) -- Output: 0 (initialized with nil values)
+
+tbl[8] = true
+print(#tbl) -- Output: 8 (the end of the array is a valid boundary)
+```
+
+As you can see if we declared the table as a list, the allocated size will be exactly equal to the number of values.
+This is done through the `setlist` instruction.
+
+Note that boundary invariant will always be maintained, so in the `setlist` case, the size will be increased by 1 until the final value is `nil`.
+
+```lua
+local tbl = {[9] = 9, [10] = 10, nil, nil, nil, nil, nil, nil, nil, nil}
+print(#tbl) -- Output: 10 (boundary invariant increased the array size to 10)
+```
+
+However, if a table is based on an index (e.g., `local tbl = {[1] = 1, [2] = 2, [3] = nil, [4] = 4}`), the process will become more complicated.
+We will be guiding you on how to calculate the size of such table in the following section.
 
 ---
 
@@ -336,7 +364,7 @@ When inserting values, Luau ensures sufficient space by reallocating the table. 
 
 1. Counting valid indices in both the array and hash parts.
 2. Calculating new sizes for each portion.
-3. Resizing the table based on these calculations.
+3. Resize the table based on these calculations.
 
 These steps ensure the table size is optimized to balance performance and memory usage, minimizing the frequency of reallocations while avoiding excessive memory waste.
 
@@ -977,72 +1005,6 @@ Thus, the final optimal size is 8.
 
 **Step 5:** The final result for the array length is 4.
 
-## Exercise For Reader
-
-Compute the length of the following table, then verify by running the code.
-
-```lua
-local tbl = {
-    [0] = "r",
-    [1] = "u",
-    [2] = "m",
-    [3] = "i",
-    [5] = "n",
-    [8] = "e",
-    [9] = nil,
-    [10] = "is",
-}
-
-print(#tbl)
-```
-
-```lua
-local tbl = {
-    [0] = "r",
-    [1] = "u",
-    [2] = "m",
-    [3] = "i",
-    [5] = "n",
-    [8] = "e",
-    [9] = nil,
-    [10] = "is",
-    [11] = nil,
-}
-
-print(#tbl)
-```
-
-```lua
-local tbl = {
-    [0] = "r",
-    [1] = "u",
-    [2] = "m",
-    [3] = "i",
-    [5] = "n",
-    [8] = "e",
-    [10] = "is",
-}
-
-print(#tbl)
-```
-
-```lua
-local tbl = {
-    [0] = "r",
-    [1] = "u",
-    [2] = "m",
-    [3] = "i",
-    [5] = "n",
-    [8] = "e",
-    [10] = "is",
-    [9] = nil,
-}
-
-print(#tbl)
-```
-
----
-
 ## Additional Info
 
 ### Table Size Limits
@@ -1132,6 +1094,8 @@ This result in a final size of:
 ## **Summary**
 
 um no
+
+If you would like some exercise, [here](../Exercise/LuauTableLengthExercise.md) you can take.
 
 ## References
 
