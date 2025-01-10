@@ -248,7 +248,7 @@ Here:
     - Since the table is declared as a list, the `allocatedSize` will be exactly equal to the number of elements, which is 7.
 
 2. Finding the array's length
-    - Check index at `allocatedSize`, `tbl[7]` is non-nil, so binary check will be performed
+    - Check index at `allocatedSize`, `tbl[7]` is nil, so binary check will be performed
     - Check at the midpoint, `tbl[4]` is non-nil, search upper half next
     - Check at the midpoint, `tbl[6]` is non-nil, search upper half next
     - Check at the midpoint, `tbl[7]` is nil, and the next search size is 0 so 6 is the final result
