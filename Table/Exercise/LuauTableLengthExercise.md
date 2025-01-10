@@ -4,6 +4,8 @@
 
 Calculate the length of the following tables
 
+---
+
 ```lua
 local tbl = {1, 2, nil, 4}
 print(#tbl)
