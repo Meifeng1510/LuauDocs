@@ -16,6 +16,11 @@ local tbl = {1, [3] = nil, 3, 2}
 print(#tbl)
 ```
 
+```lua
+local tbl = {[6] = 6, [7] = 7, nil, 2, 3, nil, 5}
+print(#tbl)
+```
+
 ---
 
 ```lua
