@@ -269,7 +269,7 @@ To preserve the tri-color invariant during the marking process, barriers are use
 
 - **Forward Barriers**: These barriers immediately mark any newly referenced white objects as gray. An example of this is upvalue writes or the `setmetatable` function, which may create new references to previously unmarked objects.
   
-- **Backward Barriers**: These barriers mark black objects as gray if their references change, ensuring that the modified object is re-queued for re-marking. A typical example of this is table writes, where the contents of tables are updated and their references may need to be revisited during the marking phase.
+- **Backward Barriers**: These barriers mark black objects as gray if their references change, and place them on a separate `grayagain` list, ensuring that the modified object is re-queued for re-marking. A typical example of this is table writes, where the contents of tables are updated and their references may need to be revisited during the marking phase.
 
 #### Special Cases
 
@@ -284,6 +284,7 @@ The following objects have special handling during the mark phase:
 #### Two-Phase Marking
 
 In Luau's incremental GC system, the Mark Phase is divided into two parts: the **First-Phase Mark** and the **Second-Phase Mark** (GCSpropagateagain).
+After the first phase mark stage finishes traversing the `gray` list, we copy `grayagain` list to `gray` once and incrementally mark it again, emptying out the `gray` list the second time.
 
 ##### First-Phase Mark
 
