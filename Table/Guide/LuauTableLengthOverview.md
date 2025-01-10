@@ -160,7 +160,7 @@ When a table is declared as a list, such as:
 local tbl = {1, 2, 3, 4}
 ```
 
-- The **`setlist`** process determines the table's size.
+- The **`setlist`** instruction determines the table's size.
 - The array size is allocated to exactly match the number of elements in the list, which in this case is 4.
 - To maintain the boundary invariant, the allocated size increases by 1 until the last value is `nil`.
 
