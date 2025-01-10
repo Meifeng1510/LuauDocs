@@ -355,7 +355,7 @@ print(#tbl) -- Output: 10 (boundary invariant increased the array size to 10)
 
 However, if a table is based on an index (e.g., `local tbl = {[1] = 1, [2] = 2, [3] = nil, [4] = 4}`), the process will become more complicated.
 
-If the optimization level is above 0 and all indices wrapped in **brackets** are positive integers ordered in an incremental order
+If the optimization level is above 0, all indices wrapped in **brackets** are positive integers ordered in incremental order, and no values are declared as a list,
 
 ```lua
 local tbl = {[1] = nil, [2] = nil, [3] = nil, [4] = nil}
@@ -375,7 +375,7 @@ print(#tbl) -- Output: 4 (the end of the array is a valid boundary)
 
 As you can see, the size will be exactly equal to the number of values, similar to what happens if we declare the table as a list.
 
-If not all indices wrapped in brackets are positive integers ordered in an incremental order,
+But if the criteria were not met,
 
 ```lua
 local tbl = {[2] = nil, [1] = nil, [3] = nil, [4] = nil} -- Wrong order
@@ -797,12 +797,12 @@ Total indices: 5
 
 **Step 2: Computing Optimal Array Sizes**
 
-- At index 1, there are 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
-- From index 1 to 2, there are 2 index total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
-- From index 1 to 4, there are 3 index total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
-- From index 1 to 8, there are 4 index total, which isn't above ⌊8/2⌋ (4) so 4 is still the most optimal size
-- From index 1 to 16, there are 5 index total, which isn't above ⌊16/2⌋ (8) so 4 is still the most optimal size
-- Since we counted all the indice, we now have the highest optimal size
+- At index 1, there is 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
+- From index 1 to 2, there are 2 indices total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
+- From indices 1 to 4, there are 3 indices total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
+- From index 1 to 8, there are 4 indices total, which isn't above ⌊8/2⌋ (4) so 4 is still the most optimal size
+- From index 1 to 16, there are 5 indices total, which isn't above ⌊16/2⌋ (8) so 4 is still the most optimal size
+- Since we counted all the indices, we now have the highest optimal size
 
 Thus, the final optimal size is 4.
 
@@ -810,7 +810,7 @@ Thus, the final optimal size is 4.
 
 - The current size is 4.
 - Check `tbl[5]`; since it is `nil`, the array size cannot be adjusted further.
-- Final array size remains 4.
+- The final array size remains 4.
 
 **Step 4: Final Size is 4**
 
@@ -845,11 +845,11 @@ Total indices: 6
 
 **Step 2: Computing Optimal Array Sizes**
 
-- At index 1, there are 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
-- From index 1 to 2, there are 2 index total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
-- From index 1 to 4, there are 3 index total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
-- From index 1 to 8, there are 5 index total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
-- Since we counted all the indice, we now have the highest optimal size
+- At index 1, there is 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
+- From index 1 to 2, there are 2 indices total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
+- From index 1 to 4, there are 3 indices total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
+- From index 1 to 8, there are 5 indices total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
+- Since we counted all the indices, we now have the highest optimal size
 
 Thus, the final optimal size is 4.
 
@@ -857,7 +857,7 @@ Thus, the final optimal size is 4.
 
 - The current size is 8.
 - Check `tbl[9]`; since it is `nil`, the array size cannot be adjusted further.
-- Final array size remains 8.
+- The final array size remains 8.
 
 **Step 4: Final Size is 8**
 
@@ -900,12 +900,12 @@ Total indices: 6
 
 **Step 2: Computing Optimal Array Sizes**
 
-- At index 1, there are 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
-- From index 1 to 2, there are 2 index total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
-- From index 1 to 4, there are 3 index total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
-- From index 1 to 8, there are 5 index total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
-- From index 1 to 16, there are 6 index total, which isn't above ⌊16/2⌋ (8) so 8 is is still the most optimal size
-- Since we counted all the indice, we now have the highest optimal size
+- At index 1, there is 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
+- From index 1 to 2, there are 2 indices total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
+- From index 1 to 4, there are 3 indices total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
+- From index 1 to 8, there are 5 indices total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
+- From index 1 to 16, there are 6 indices total, which isn't above ⌊16/2⌋ (8) so 8 is still the most optimal size
+- Since we counted all the indices, we now have the highest optimal size
 
 Thus, the final optimal size is 8.
 
@@ -922,11 +922,11 @@ Thus, the final optimal size is 8.
 
 ##### Calculating Array Length
 
-**Step 1:** Check index at `allocatedSize`, which is `tbl[10]`. Since the value is nil, binary search will be performed.
+**Step 1:** Check index at `allocatedSize`, which is `tbl[10]`. Since the value is nil, a binary search will be performed.
 
-**Step 2:** Check midpoint `tbl[6]`, since it is non-nil, search upperhalf next.
+**Step 2:** Check midpoint `tbl[6]`, since it is non-nil, search upper half next.
 
-**Step 3:** Check midpoint `tbl[8]`, since it is non-nil, search upperhalf next.
+**Step 3:** Check midpoint `tbl[8]`, since it is non-nil, search upper half next.
 
 **Step 4:** Check midpoint `tbl[9]`, since it is non-nil and the next search size is 0, that's the final result.
 
@@ -949,7 +949,7 @@ local tbl = {
 }
 ```
 
-For this example, let's assume we are inserting the tenth, and the ninth key
+For this example, let's assume we are inserting the tenth and the ninth key
 
 ##### Inserting the Tenth Index
 
@@ -969,12 +969,12 @@ Total indices: 6
 
 **Step 2: Computing Optimal Array Sizes**
 
-- At index 1, there are 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
-- From index 1 to 2, there are 2 index total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
-- From index 1 to 4, there are 3 index total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
-- From index 1 to 8, there are 5 index total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
-- From index 1 to 16, there are 6 index total, which isn't above ⌊16/2⌋ (8) so 8 is is still the most optimal size
-- Since we counted all the indice, we now have the highest optimal size
+- At index 1, there is 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
+- From index 1 to 2, there are 2 indices total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
+- From index 1 to 4, there are 3 indices total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
+- From index 1 to 8, there are 5 indices total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
+- From index 1 to 16, there are 6 indices total, which isn't above ⌊16/2⌋ (8) so 8 is still the most optimal size
+- Since we counted all the indices, we now have the highest optimal size
 
 Thus, the final optimal size is 8.
 
@@ -982,7 +982,7 @@ Thus, the final optimal size is 8.
 
 - The current size is 8.
 - Check `tbl[9]`; since it is `nil`, the array size cannot be adjusted further.
-- Final array size remains 8.
+- The final array size remains 8.
 
 **Step 4: Final Size is 8**
 
@@ -1004,12 +1004,12 @@ Total indices: 7
 
 **Step 2: Computing Optimal Array Sizes**
 
-- At index 1, there are 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
-- From index 1 to 2, there are 2 index total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
-- From index 1 to 4, there are 3 index total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
-- From index 1 to 8, there are 5 index total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
-- From index 1 to 16, there are 7 index total, which isn't above ⌊16/2⌋ (8) so 8 is is still the most optimal size
-- Since we counted all the indice, we now have the highest optimal size
+- At index 1, there is 1 index total, which is above ⌊1/2⌋ (0) so 1 is the current most optimal size
+- From index 1 to 2, there are 2 indices total, which is above ⌊2/2⌋ (1) so 2 is the current most optimal size
+- From index 1 to 4, there are 3 indices total, which is above ⌊4/2⌋ (2) so 4 is the current most optimal size
+- From index 1 to 8, there are 5 indices total, which is above ⌊8/2⌋ (4) so 8 is the current most optimal size
+- From index 1 to 16, there are 7 indices total, which isn't above ⌊16/2⌋ (8) so 8 is still the most optimal size
+- Since we counted all the indices, we now have the highest optimal size
 
 Thus, the final optimal size is 8.
 
@@ -1028,13 +1028,13 @@ Thus, the final optimal size is 8.
 
 ###### Calculating Array Length
 
-**Step 1:** Check index at `allocatedSize`, which is `tbl[12]`. Since the value is nil, binary search will be performed.
+**Step 1:** Check index at `allocatedSize`, which is `tbl[12]`. Since the value is nil, a binary search will be performed.
 
-**Step 2:** Check midpoint `tbl[7]`, since it is nil, search lowerhalf next.
+**Step 2:** Check midpoint `tbl[7]`, since it is nil, search lower half next.
 
-**Step 3:** Check midpoint `tbl[4]`, since it is non-nil, search upperhalf next.
+**Step 3:** Check midpoint `tbl[4]`, since it is non-nil, search upper half next.
 
-**Step 4:** Check midpoint `tbl[5]`, since it is nil and, search lowerhalf next.
+**Step 4:** Check midpoint `tbl[5]`, since it is nil and, search lower half next.
 
 **Step 3:** Check midpoint `tbl[5]`, since it is nil, and the next search size is 0, that's the final result.
 
@@ -1059,7 +1059,7 @@ table.create(2^26 + 1) -- Table overflow error
 
 The function `rehash` (used for re-allocation) is triggered when `newkey` function is called and the following criterias are met:
 
-- If the key we are currently inserting doesn't exist (the value at index is void, not nil)
+- If the key we are currently inserting doesn't exist (the value at the index is void, not nil)
   - This happens when you are inserting a key into the hash portion, and the key doesn't exist yet.
 - And either
   - The key being inserted is an integer and is equal to `allocatedSize` + 1
