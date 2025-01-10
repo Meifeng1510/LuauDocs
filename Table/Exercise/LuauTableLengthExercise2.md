@@ -67,8 +67,9 @@ print(#tbl)
 ---
 
 ```lua
-local tbl = {nil, two = 2, 3, [4] = 4, [5-3] = nil, [1] = 1, 7, [3] = nil, [8] = 8, [9] = 9}
-print(#tbl)
+local tbl, n = {nil, two = 2, 3, [4] = 4, [5-3] = nil, 7, [3] = nil}
+tbl[5], n = tbl, #tbl
+print(#tbl, n)
 ```
 
 ---
