@@ -68,4 +68,5 @@ print(#tbl)
 The solution can be verified by executing the code. As for the reasoning, ask hao...
 
 More exercise: [Part 2](LuauTableLengthExercise2.md)
+
 Guides: [Basic overview](../Guide/LuauTableLengthOverview.md), [In-depth view](../Guide/LuauTableLengthInDepth.md)
