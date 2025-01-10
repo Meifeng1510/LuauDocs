@@ -354,7 +354,42 @@ print(#tbl) -- Output: 10 (boundary invariant increased the array size to 10)
 ```
 
 However, if a table is based on an index (e.g., `local tbl = {[1] = 1, [2] = 2, [3] = nil, [4] = 4}`), the process will become more complicated.
-We will be guiding you on how to calculate the size of such table in the following section.
+
+If the optimization level is above 0 and all indices wrapped in **brackets** are positive integers ordered in an incremental order
+
+```lua
+local tbl = {[1] = nil, [2] = nil, [3] = nil, [4] = nil}
+print(#tbl) -- Output: 0 (initialized with nil values)
+
+tbl[4] = true
+print(#tbl) -- Output: 4 (the end of the array is a valid boundary)
+```
+
+```lua
+local tbl = {[1] = nil, [2] = nil, [3] = nil, [4] = nil, a = "a"} -- This is fine, `a` is not wrapped in a bracket.
+print(#tbl) -- Output: 0 (initialized with nil values)
+
+tbl[4] = true
+print(#tbl) -- Output: 4 (the end of the array is a valid boundary)
+```
+
+As you can see, the size will be exactly equal to the number of values, similar to what happens if we declare the table as a list.
+
+If not all indices wrapped in brackets are positive integers ordered in an incremental order,
+
+```lua
+local tbl = {[2] = nil, [1] = nil, [3] = nil, [4] = nil} -- Wrong order
+tbl[4] = true
+print(#tbl) -- Output: 0
+```
+
+```lua
+local tbl = {[1] = nil, [2] = nil, [3] = nil, [4] = nil, ["a"] = true} -- Non-integer key
+tbl[4] = true
+print(#tbl) -- Output: 0
+```
+
+The size will be determined through an alternative way which we will be guiding you on in the next section.
 
 ---
 
@@ -520,7 +555,7 @@ Now that we’ve covered counting, let’s move on to the second part.
 
 #### Second Part: Computing the Optimal Array Sizes
 
-In the second part, we are determining the optimal array sizes using the `computesizes` function.
+In the second part, we determine the optimal array sizes using the `computesizes` function.
 
 ##### Definition of Optimal Size
 
