@@ -877,8 +877,8 @@ Let's change up a bit
 local tbl = {1, 2, nil, 4, nil, 6, nil, 8, nil}
 ```
 
-Normally, we have to check inserting key by key, but most of the time it can be skipped without affecting final result (like in the 2 examples above), we just skipped it.
-For this example, let's assume we are inserting the ninth key (the final key, [9] = nil)
+Normally, we have to check inserting key by key, but most of the time it can be skipped without affecting the final result (like in the 2 examples above), we just skipped it.
+From this example onward, that is not the case so let's assume we are inserting the ninth key here (the final key, [9] = nil)
 
 ```lua
 local tbl = {1, 2, nil, 4, nil, 6, nil, 8, nil}
