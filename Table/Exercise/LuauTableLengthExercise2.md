@@ -66,14 +66,9 @@ print(#tbl)
 
 ---
 
-```lua
-local tbl, n = {nil, two = 2, 3, [4] = 4, [5-3] = nil, 7, [3] = nil}
-tbl[5], n = tbl, #tbl
-print(#tbl, n)
-```
-
----
-
 Again, the solution can be verified by executing the code. As for the reasoning, ask hao...
+
+More exercise: [Part 3](LuauTableLengthExercise3.md)
+Previous exercise: [Part 1](LuauTableLengthExercise1.md)
 
 Guides: [Basic overview](../Guide/LuauTableLengthOverview.md), [In-depth view](../Guide/LuauTableLengthInDepth.md)
