@@ -164,6 +164,11 @@ local tbl = {1, 2, 3, 4}
 - The array size is allocated to exactly match the number of elements in the list, which in this case is 4.
 - To maintain the boundary invariant, the allocated size increases by 1 until the last value is `nil`.
 
+> Note that, if the optimization level is above 0, all indices wrapped in brackets are positive integers ordered in incremental order, and no values are declared as a list,
+> the table size will be exactly equal to the number of values, similar to what happens if we declare the table as a list.
+> 
+> More details can be found in the [in-depth guide](LuauTableLengthInDepth.md#internally-allocated-size-in-luau)
+
 ```lua
 local tbl = {[5] = 5, [6] = 6, 1, 2, 3, 4}
 ```
@@ -174,7 +179,7 @@ In this case, due to boundary invariance, the allocated size will be 6.
 For tables declared using explicit indices, such as:
 
 ```lua
-local tbl = {[1] = 1, [2] = 2, [3] = 3, [4] = 4}
+local tbl = {[4] = 4, [3] = 4, [3] = 2, [1] = 1}
 ```
 
 - The **`rehash`** process is used to calculate the size of the table.
@@ -213,7 +218,7 @@ Note that, the key which triggers `rehash` is treated as if it's already in the 
 Let's look at some examples to understand how length is calculated:
 
 ```lua
-local tbl = {[1] = 1, [2] = 2, [3] = nil, [4] = 4, [5] = nil, [6] = 6, [7] = nil, [8] = 8, [9] = 9}
+local tbl = {[9] = 9, [8] = 8, [7] = nil, [6] = 6, [5] = nil, [4] = 4, [3] = nil, [2] = 2, [1] = 1}
 ```
 
 In this case:
