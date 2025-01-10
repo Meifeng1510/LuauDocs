@@ -35,6 +35,44 @@ print(#tbl)
 
 ---
 
+```lua
+local tbl = {[1] = nil, [2] = nil, [3] = 3, [4] = 4, five = 5}
+print(#tbl)
+```
+
+```lua
+local tbl = {[1] = nil, [2] = nil, [3] = nil, [4] = 4, [5] = nil, [6] = nil, ["7"] = 7}
+print(#tbl)
+```
+
+---
+
+```lua
+local tbl = {[1] = nil, [2] = nil, [3] = 3, [4] = 4, five = 5}
+print(#tbl)
+```
+
+```lua
+local tbl = {[1] = nil, [2] = nil, [3] = nil, [4] = 4, [5] = nil, [6] = nil, ["7"] = 7}
+print(#tbl)
+```
+
+---
+
+```lua
+local tbl = {1, [6] = 6, nil, [1] = 1, nil, [5] = 5, 6, [8] = 8}
+print(#tbl)
+```
+
+---
+
+```lua
+local tbl = {nil, two = 2, 3, [4] = 4, [5-3] = nil, [1] = 1, 7, [3] = nil, [8] = 8, [9] = 9}
+print(#tbl)
+```
+
+---
+
 Again, the solution can be verified by executing the code. As for the reasoning, ask hao...
 
 Guides: [Basic overview](../Guide/LuauTableLengthOverview.md), [In-depth view](../Guide/LuauTableLengthInDepth.md)
