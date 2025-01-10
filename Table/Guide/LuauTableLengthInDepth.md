@@ -132,7 +132,7 @@ static int updateaboundary(Table* t, int boundary)
 
 #### Key Behavior:
 
-- The current and new boundary must lower than `arraysize`
+- The current and new boundary must lower than `sizearray`
 - If `array[boundary - 1]` is `nil`, but `array[boundary - 2]` is non-`nil`:
   - Update the boundary to `boundary - 1`.
 - If `array[boundary]` is non-`nil` and `array[boundary + 1]` is `nil`:
@@ -604,7 +604,7 @@ In the `rehash` portion, this is achieved by adding `adjusted size + extra`, whi
 ##### Enforcing the Boundary Invariant
 
 After adjusting the array size, we need to ensure the value at `tbl[size + 1]` is still nil
-(enforcing the boundary invariant that the value at `tbl[arraySize + 1]` must be nil).
+(enforcing the boundary invariant that the value at `tbl[sizearray + 1]` must be nil).
 
 To do this, we call `adjustasize` a second time. But this time, we add only the extra size (not the extra multiplied by 2) to ensure that `tbl[size]` is nil.
 This works because `adjustasize` adjusts the size until `tbl[size + 1]` is nil.
