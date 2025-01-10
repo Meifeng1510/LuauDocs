@@ -288,3 +288,4 @@ For more details, you can explore the [Luau source code](https://github.com/luau
 ## References
 
 [ltable.cpp](https://github.com/luau-lang/luau/blob/master/VM/src/ltable.cpp)
+[lvm.cpp](https://github.com/luau-lang/luau/blob/master/VM/src/lvmexecute.cpp)
