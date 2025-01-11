@@ -72,6 +72,16 @@ The `getn` function follows a straightforward process:
 
    Example:
    ```lua
+   local tbl = table.create(100)
+   tbl[100] = true
+
+   print(#tbl) -- 100, the end of the array is a valid boundary
+   ```
+
+   Since the value at `array[sizearray - 1]` is non-`nil` and the hash portion is empty,
+   the allocated size is returned as the boundary
+   
+   ```lua
    local tbl = table.create(100, true)
    tbl[100] = nil
 
@@ -100,10 +110,10 @@ The `getn` function follows a straightforward process:
    The second `getn` calls, even though we removed most of the value,
    as long as the boundary remains valid, it won't be re-computed and instead return the cache result.
 
-3. **Update Boundary:**
+4. **Update Boundary:**
    - If neither fast path applies, the function attempts to update the boundary using the `updateaboundary` function.
 
-4. **Binary Search (Fallback):**
+5. **Binary Search (Fallback):**
    - If the boundary cannot be updated, it is recomputed from scratch using a binary search to find the last non-`nil` element.
 
 ### Updating the Boundary
