@@ -66,6 +66,10 @@ The `getn` function follows a straightforward process:
    - The function first calls `getaboundary`, which retrieves the cached boundary of the table.
    - If the cached boundary of the table is 0, the allocated size will be returned. This happens if `getn` has never been called on the table or if the last `getn` call returned 0
 
+2. **Fast Path Validation:**
+   - If `array[sizearray - 1]` is non-`nil` and the hash portion is empty, the allocated size is returned as the boundary (fast path).
+   - If the `boundary` is under the allocated size and `array[boundary - 1]` is non-`nil` while `array[boundary]` is `nil`, the `boundary` is valid and returned.
+
    Example:
    ```lua
    local tbl = table.create(100, true)
@@ -95,10 +99,6 @@ The `getn` function follows a straightforward process:
 
    The second `getn` calls, even though we removed most of the value,
    as long as the boundary remains valid, it won't be re-computed and instead return the cache result.
-
-2. **Fast Path Validation:**
-   - If `array[sizearray - 1]` is non-`nil` and the hash portion is empty, the allocated size is returned as the boundary (fast path).
-   - If the `boundary` is under the allocated size and `array[boundary - 1]` is non-`nil` while `array[boundary]` is `nil`, the `boundary` is valid and returned.
 
 3. **Update Boundary:**
    - If neither fast path applies, the function attempts to update the boundary using the `updateaboundary` function.
