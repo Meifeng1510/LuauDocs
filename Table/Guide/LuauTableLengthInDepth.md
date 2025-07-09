@@ -1106,10 +1106,7 @@ typedef struct Table
 } Table;
 ```
 
-The `Table` structure itself requires **45 bytes**, with **3 bytes of padding** for alignment.
-This results in a total size of **48 bytes** for the structure alone,
-excluding the memory required for the `array` and `node`.
-
+The `Table` structure itself requires **48 bytes**, excluding the memory required for the `array` and `node`.
 There is also an additional **16 bytes** for the `TValue` that is holding the `Table`.
 
 #### Memory Usage Breakdown
